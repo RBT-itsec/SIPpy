@@ -26,17 +26,5 @@ def main() -> None:
     print(f"Ping: {plugins.ping('172.31.10.13')}")  # deprecated
 
 
-
-    # for conn_test in config['tests']['connectivity']:
-    #     if conn_test in dir(plugins):
-    #         print(f"Running test {conn_test}")
-    #     else:
-    #         print(f"No plugin found for {conn_test}")
-
-    # plugins.active_interface()
-    # interfaces = plugins.interfaces()
-    # print(interfaces)
-
-
 if __name__ == "__main__":
     main()
