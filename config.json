@@ -1,0 +1,7 @@
+{
+    "config": ["connectivity", "performance"],
+    "plugins": {
+        "connectivity": ["interfaces", "ping"],
+        "performance": ["iperf"]
+    }
+}
