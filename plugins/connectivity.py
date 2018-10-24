@@ -66,7 +66,7 @@ def _interface_state(interface: str):
     for flag in flags:
         try:
             with open(f"{_basepath}{flag}") as infile:
-                flags[flag] = infile.read()
+                flags[flag] = infile.read().strip()
         except FileNotFoundError:
             print(f"File {_basepath}{flag} not found")
 
