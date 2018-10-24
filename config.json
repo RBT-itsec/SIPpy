@@ -1,7 +1,16 @@
 {
-    "config": ["connectivity", "performance"],
+    "modules": {
+        "connectivity": ["base_check", "ping"],
+        "performance": ["iperf"],
+        "output": []
+    },
     "plugins": {
-        "connectivity": ["interfaces", "ping"],
-        "performance": ["iperf"]
+        "ping": {
+            "count": 3
+        }
+    },
+    "targets": {
+        "sbc": "8.8.8.8",
+        "codec": "192.168.23.1"
     }
 }
