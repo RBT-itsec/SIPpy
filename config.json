@@ -1,16 +1,28 @@
 {
-    "modules": {
-        "connectivity": ["base_check", "ping"],
-        "performance": ["iperf"],
-        "output": []
-    },
     "plugins": {
         "ping": {
             "count": 3
         }
     },
     "targets": {
-        "sbc": "8.8.8.8",
-        "codec": "192.168.23.1"
+        "sbc": {
+            "addr": "8.8.8.8",
+            "tests": [
+                "base_check",
+                "ping"
+            ]
+        },
+        "codec": {
+            "addr": "192.168.23.1",
+            "tests": [
+                "base_check",
+                "ping",
+                "foo"
+            ]
+        },
+        "foo": {
+            "addr": "1.1.1.1",
+            "tests": []
+        }
     }
 }

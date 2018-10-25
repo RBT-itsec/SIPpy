@@ -1,16 +1,19 @@
 """
 Basic tests for network connectivity
+
+Each exported plugin needs to accept the target system as _one_ parameter.
 """
 
 import subprocess
-# import socket
 from ipaddress import IPv4Address, IPv6Address
 import re
+import logging
 
-from typing import List, Dict
+from typing import List, Dict, Optional, Match, Tuple
 
 from . import register_plugin
-# from .objects import NetworkInterface, NetworkInterfaceState, NetworkInterfaceAddrs
+
+LOGGER = logging.getLogger("SIPpy.Connectivity")
 
 GW_MATCH = re.compile(r'via (([0-9]{1,3}\.){3}[0-9]{1,3})')
 IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
@@ -19,17 +22,21 @@ IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
 @register_plugin
 def base_check(target: str):
     """ Do some basic checks (route, link, ...) """
-    _gw = _gateway(target)
-    if _gw:
-        _gw, _dev = _gw  # unpack gateway and device
+    _gw, _dev = _gateway(target)
+    # if _gw:
+        # _gw, _dev = _gw  # unpack gateway and device
+
+    if _dev:
         _dev_flags = _interface_state(_dev)
-        # return gateway, interface and interface flags
-        return (_gw, _dev, _dev_flags)
     else:
-        return False
+        _dev_flags = {'speed': None, 'operstate': None, 'duplex': None}  # TODO: dict fromkeys - also in devflags function
+    # return gateway, interface and interface flags
+    return (_gw, _dev, _dev_flags)
+    # else:
+        # return False
 
 
-def _gateway(target: str) -> str:
+def _gateway(target: str) -> Tuple[Optional[str], Optional[str]]:
     """ Get gateway to address """
     completed = subprocess.run(
         ["ip", "route", "get", target], capture_output=True)
@@ -41,7 +48,7 @@ def _gateway(target: str) -> str:
             if _gateway:
                 _gateway = _gateway.group(1)
             else:
-                return False
+                _gateway = None
         else:
             _gateway = "local link"
 
@@ -50,14 +57,15 @@ def _gateway(target: str) -> str:
         if _interface:
             _interface = _interface.group(1)
         else:
-            return False
+            _interface = None
     else:
-        return False
+        LOGGER.critical(f"Route command failed with code {completed.returncode}")
+        return (None, None)
 
     return (_gateway, _interface)
 
 
-def _interface_state(interface: str):
+def _interface_state(interface: str) -> Dict[str, Optional[str]]:
     """ Get interface state """
     _basepath = f"/sys/class/net/{interface}/"
 
