@@ -48,7 +48,7 @@ class Config():
                 _failed = [test for test in _tests if test not in dir(plugins)]
                 _tests = [test for test in _tests if test in dir(plugins)]
                 if _failed:
-                    LOGGER.warning(f"Test(s) {_failed} not found as Plugin.")
+                    LOGGER.warning(f"Test(s) {_failed} not found as Plugin for target {target}.")
                 if _tests and _addr:
                     self._targets[target] = _addr
                     self._tests[target] = _tests

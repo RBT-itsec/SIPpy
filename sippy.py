@@ -24,9 +24,9 @@ def main() -> None:
     LOGGER.info(f"Lucky bits for today are: {randbits(42)}")
 
     config = Config()
-    config.from_file("config.json")
-    print(config.targets)
-    print(config.tests)
+    config.from_file("config.json")  # make prettier e.g. Config(filename)
+    # print(config.targets)
+    # print(config.tests)
 
     for target, addr in config.targets.items():
         tests = config.tests.get(target)
