@@ -11,13 +11,14 @@ import logging
 
 from typing import Dict, Optional
 
-from lib.objects import Testcase
 from . import register_plugin
 
 LOGGER = logging.getLogger("SIPpy.Connectivity")
 
 GW_MATCH = re.compile(r'via (([0-9]{1,3}\.){3}[0-9]{1,3})')
 IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
+
+# TODO: add TCP full connect test. Find a way to pass optional port without changing config too much
 
 
 @register_plugin

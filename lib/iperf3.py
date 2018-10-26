@@ -25,10 +25,10 @@ import json
 import threading
 from socket import SOCK_DGRAM, SOCK_STREAM
 
-try:
-    from queue import Queue
-except ImportError:
-    from Queue import Queue  # Python2 compatibility
+# try:
+from queue import Queue
+# except ImportError:
+    # from Queue import Queue  # Python2 compatibility
 
 
 __version__ = '0.1.10'

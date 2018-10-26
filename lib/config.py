@@ -18,6 +18,7 @@ LOGGER = logging.getLogger("SIPpy.Config")
 
 
 class Config():
+    """ Holds all configuration data for SIPpy """
     def __init__(self, filename=None):
         self.config = None
         self._blocking_tests: List[str] = []
@@ -27,11 +28,13 @@ class Config():
             self.from_file(filename)
 
     @property
-    def blocking_tests(self):
+    def blocking_tests(self) -> List[str]:
+        """ Return a list of all blocking testcases """
         return self._blocking_tests
 
     @blocking_tests.setter
     def blocking_tests(self, value):
+        """ Get all blocking tests from json """
         _tests = value.get('blocking')
         if _tests:
             if not isinstance(_tests, list):
@@ -41,10 +44,12 @@ class Config():
 
     @property
     def targets(self) -> List[Target]:
+        """ Return a list of all targets """
         return self._targets
 
     @targets.setter
     def targets(self, value: Dict):
+        """ Get all targets from json file """
         if not value:
             LOGGER.critical(f"No target data in config")
         for target, options in value.items():
@@ -60,10 +65,12 @@ class Config():
 
     @property
     def tests(self) -> List[Testcase]:
+        """ Return a list of all testcases """
         return self._tests
 
     @tests.setter
     def tests(self, value: Dict):
+        """ Get all testcases from json file """
         for target, options in value.items():
             _addr = options.get('addr')
             _tests = options.get('tests')

@@ -8,12 +8,14 @@ from typing import Dict
 
 @dataclass
 class Target():
+    """ Represents a test target """
     name: str
     addr: str
 
 
 @dataclass
 class Testcase():
+    """ Represents a testcase """
     name: str
     target: Target
     returncode: bool = False
@@ -23,5 +25,6 @@ class Testcase():
 
 @dataclass
 class PluginConfig():
+    """ Represents a plugins configuration """
     name: str
     options: Dict
