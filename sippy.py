@@ -28,7 +28,7 @@ def main() -> None:
     for testcase in config.tests:
         func = getattr(plugins, testcase.name)
         testcase.output = func(testcase.target.addr)
-        
+        testcase.returncode = all(testcase.output.values())
         print(testcase)
 
 
