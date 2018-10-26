@@ -2,11 +2,12 @@
 
 (c) jakob.pfister@rbt-nbg.de
 """
+# pylint: disable=W1203
 
-import json
+
 import logging
 from secrets import randbits
-from typing import Dict
+
 
 import plugins
 from lib.config import Config

@@ -3,13 +3,13 @@ Basic tests for network connectivity
 
 Each exported plugin needs to accept the target system as _one_ parameter.
 """
+# pylint: disable=W1203
 
 import subprocess
-from ipaddress import IPv4Address, IPv6Address
 import re
 import logging
 
-from typing import List, Dict, Optional, Match, Tuple
+from typing import Dict, Optional, Tuple
 
 from . import register_plugin
 
@@ -24,16 +24,17 @@ def base_check(target: str) -> Tuple[Optional[str], bool, Optional[str], Dict[st
     """ Do some basic checks (route, link, ...) """
     _gw, _gw_reachable, _dev = _gateway(target)
     # if _gw:
-        # _gw, _dev = _gw  # unpack gateway and device
+    # _gw, _dev = _gw  # unpack gateway and device
 
     if _dev:
         _dev_flags = _interface_state(_dev)
     else:
-        _dev_flags = {'speed': None, 'operstate': None, 'duplex': None}  # TODO: dict fromkeys - also in devflags function
+        # TODO: dict fromkeys - also in devflags function
+        _dev_flags = {'speed': None, 'operstate': None, 'duplex': None}
     # return gateway, interface and interface flags
     return (_gw, _gw_reachable, _dev, _dev_flags)
     # else:
-        # return False
+    # return False
 
 
 def _gateway(target: str) -> Tuple[Optional[str], bool, Optional[str]]:
@@ -66,7 +67,8 @@ def _gateway(target: str) -> Tuple[Optional[str], bool, Optional[str]]:
         else:
             _interface = None
     else:
-        LOGGER.critical(f"Route command failed with code {completed.returncode}")
+        LOGGER.critical(
+            f"Route command failed with code {completed.returncode}")
         # return (None, None)
 
     return (_gateway, _gateway_reachable, _interface)
@@ -76,7 +78,8 @@ def _interface_state(interface: str) -> Dict[str, Optional[str]]:
     """ Get interface state """
     _basepath = f"/sys/class/net/{interface}/"
 
-    flags = {'speed': Optional[str], 'operstate': Optional[str], 'duplex': Optional[str]}
+    flags = {'speed': Optional[str],
+             'operstate': Optional[str], 'duplex': Optional[str]}
 
     for flag in flags:
         try:
@@ -92,7 +95,7 @@ def _interface_state(interface: str) -> Dict[str, Optional[str]]:
 def ping(target: str) -> Optional[Dict[str, str]]:
     """ Run the ping command """
     rtts: Optional[Dict[str, str]]
-    
+
     completed = subprocess.run(
         ['ping', '-c', '3', target], capture_output=True)
 
@@ -105,5 +108,5 @@ def ping(target: str) -> Optional[Dict[str, str]]:
         rtts['max'] = _rtts[2]
     else:
         rtts = None
-    
+
     return rtts

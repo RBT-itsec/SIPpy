@@ -3,17 +3,21 @@ Config class
 
 TODO: add support for plugin configuration
 """
+# pylint: disable=W1203
 
 import json
 import logging
-import plugins
 from typing import Dict
+
+import plugins
 
 
 LOGGER = logging.getLogger("SIPpy.Config")
 
 
 class Config():
+    """ Represents the config for the tests """
+
     def __init__(self):
         self.config = None
         self._targets = {}
@@ -22,16 +26,20 @@ class Config():
 
     @property
     def targets(self) -> Dict:
+        """ Return all the targets in the config """
         return self._targets
 
     @targets.setter
-    def targets(self, value: Dict[str, Dict]):  # add types for second dict [str, List] ? accept also [str, str]
+    # add types for second dict [str, List] ? accept also [str, str]
+    def targets(self, value: Dict[str, Dict]):
+        """ Set the targets and tests cases. """
+        # TODO: Move tests into separate property
         if not value:
             LOGGER.critical(f"No target data in config")
         for target, options in value.items():
             _addr = options.get('addr')
             if not _addr:
-                LOGGER.critical(f"No address found for {target}")
+                LOGGER.warning(f"No address found for {target}")
 
             _tests = options.get('tests')
             if _tests:
@@ -45,10 +53,12 @@ class Config():
                     self._targets[target] = _addr
                     self._tests[target] = _tests
             else:
-                LOGGER.critical(f"No tests found for target {target}. Removing from test config.")
+                LOGGER.warning(
+                    f"No tests found for target {target}. Removing from test config.")
 
     @property
     def tests(self) -> Dict:
+        """ Return all tests in the configuration """
         return self._tests
 
     def from_file(self, filename: str):
@@ -61,9 +71,3 @@ class Config():
             LOGGER.critical(f"Configuration file {filename} not found!")
         except json.JSONDecodeError:
             LOGGER.critical(f"Could not decode data from {filename}!")
-
-    # def _check_config(self):
-    #     """ Check config for completeness and errors """
-    #     # Get all used plugins from config and check if they are available
-        
-        
