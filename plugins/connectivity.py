@@ -9,7 +9,7 @@ import subprocess
 import re
 import logging
 
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional
 
 from lib.objects import Testcase
 from . import register_plugin
@@ -77,8 +77,8 @@ def _interface_state(interface: Optional[str]) -> Dict[str, Optional[str]]:
     """ Get interface state """
     _basepath = f"/sys/class/net/{interface}/"
 
-    flags = {'speed': Optional[str],
-             'operstate': Optional[str], 'duplex': Optional[str]}
+    flags: Dict[str, Optional[str]] = {
+        'speed': None, 'operstate': None, 'duplex': None}
 
     if interface:
         for flag in flags:
@@ -96,9 +96,7 @@ def _interface_state(interface: Optional[str]) -> Dict[str, Optional[str]]:
 @register_plugin
 def ping(target: str) -> Dict[str, Optional[str]]:
     """ Run the ping command """
-    rtts = {'min': Optional[str],
-            'avg': Optional[str], 'max': Optional[str]}
-    # rtts = {'min': None, 'avg': None, 'max': None}
+    rtts: Dict[str, Optional[str]] = {'min': None, 'avg': None, 'max': None}
 
     try:
         completed = subprocess.run(

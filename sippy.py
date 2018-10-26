@@ -29,6 +29,9 @@ def main() -> None:
         func = getattr(plugins, testcase.name)
         testcase.output = func(testcase.target.addr)
         testcase.returncode = all(testcase.output.values())
+        if testcase.blocking and not testcase.returncode:
+            print(f"Error running blocking test {testcase.name}. Quitting.")
+            return
         print(testcase)
 
 
