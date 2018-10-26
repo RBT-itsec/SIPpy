@@ -21,93 +21,96 @@ IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
 
 
 @register_plugin
-# def base_check(target: str) -> Tuple[Optional[str], bool, Optional[str], Dict[str, Optional[str]]]:
-def base_check(target: str) -> Testcase:
+def base_check(target: str) -> Dict:
     """ Do some basic checks (route, link, ...) """
-    _gw, _dev = _gateway(target)
+    _gwcheck = _gateway(target)
+    _gw = _gwcheck.get('gateway')
+    _dev = _gwcheck.get('interface')
     _gw_reachable: bool = False
 
-    if _dev:
-        _dev_flags = _interface_state(_dev)
-    else:
-        # TODO: dict fromkeys - also in devflags function
-        _dev_flags = {'speed': None, 'operstate': None, 'duplex': None}
+    _dev_flags = _interface_state(_dev)
+
     if _gw and _gw != "link-local" and _dev_flags['operstate'] == "up":
         _gw_reachable = True if ping(_gw) else False
-    # return gateway, interface and interface flags
-    # return (_gw, _gw_reachable, _dev, _dev_flags)
-    return Testcase(name="base_check",
-                    target=target,
-                    code=all([_gw, _gw_reachable, _dev, _dev_flags]),
-                    blocking=True,
-                    output={'gateway': _gw, 'reachable': _gw_reachable, 'dev': _dev, 'flags': _dev_flags})
+    if _gw == "link-local":
+        _gw_reachable = True
+    return {'gateway': _gw, 'reachable': _gw_reachable, 'dev': _dev, 'flags': _dev_flags}
 
 
-def _gateway(target: str) -> Tuple[Optional[str], Optional[str]]:
+def _gateway(target: str) -> Dict:
     """ Get gateway to address """
-    _gateway: Optional[str]
-    _interface: Optional[str]
+    _gateway: Optional[str] = None
+    _interface: Optional[str] = None
 
-    completed = subprocess.run(
-        ["ip", "route", "get", target], capture_output=True)
-    if not completed.returncode:
-        route = completed.stdout.splitlines()[0].decode()
-        if "via" in route:
-            # Search for gateway
-            _gwmatch = GW_MATCH.search(route)
-            if _gwmatch and _gwmatch.group(1):
-                _gateway = _gwmatch.group(1)
+    try:
+        completed = subprocess.run(
+            ["ip", "route", "get", target], capture_output=True)
+
+        if not completed.returncode:
+            route = completed.stdout.splitlines()[0].decode()
+            if "via" in route:
+                # Search for gateway
+                _gwmatch = GW_MATCH.search(route)
+                if _gwmatch and _gwmatch.group(1):
+                    _gateway = _gwmatch.group(1)
+                else:
+                    _gateway = None
             else:
-                _gateway = None
+                _gateway = "link-local"
+
+            # Search for interface name
+            _ifmatch = IF_MATCH.search(route)
+            if _ifmatch and _ifmatch.group(1):
+                _interface = _ifmatch.group(1)
+            else:
+                _interface = None
         else:
-            _gateway = "link-local"
+            LOGGER.critical(
+                f"Route command failed with code {completed.returncode}")
+    except FileNotFoundError:
+        LOGGER.critical(f"IProute2 program not found")
 
-        # Search for interface name
-        _ifmatch = IF_MATCH.search(route)
-        if _ifmatch and _ifmatch.group(1):
-            _interface = _ifmatch.group(1)
-        else:
-            _interface = None
-    else:
-        LOGGER.critical(
-            f"Route command failed with code {completed.returncode}")
-
-    return (_gateway, _interface)
+    return {'gateway': _gateway, 'interface': _interface}
 
 
-def _interface_state(interface: str) -> Dict[str, Optional[str]]:
+def _interface_state(interface: Optional[str]) -> Dict[str, Optional[str]]:
     """ Get interface state """
     _basepath = f"/sys/class/net/{interface}/"
 
     flags = {'speed': Optional[str],
              'operstate': Optional[str], 'duplex': Optional[str]}
 
-    for flag in flags:
-        try:
-            with open(f"{_basepath}{flag}") as infile:
-                flags[flag] = infile.read().strip()
-        except FileNotFoundError:
-            print(f"File {_basepath}{flag} not found")
+    if interface:
+        for flag in flags:
+            try:
+                with open(f"{_basepath}{flag}") as infile:
+                    flags[flag] = infile.read().strip()
+            except FileNotFoundError:
+                LOGGER.warning(f"File {_basepath}{flag} not found")
+    else:
+        LOGGER.warning(f"No interface given for interface status check")
 
     return flags
 
 
 @register_plugin
-def ping(target: str) -> Optional[Dict[str, str]]:
+def ping(target: str) -> Dict[str, Optional[str]]:
     """ Run the ping command """
-    rtts: Optional[Dict[str, str]]
+    rtts = {'min': Optional[str],
+            'avg': Optional[str], 'max': Optional[str]}
+    # rtts = {'min': None, 'avg': None, 'max': None}
 
-    completed = subprocess.run(
-        ['ping', '-c', '3', target], capture_output=True)
+    try:
+        completed = subprocess.run(
+            ['ping', '-c', '3', target], capture_output=True)
 
-    if not completed.returncode:
-        _rtts = completed.stdout.splitlines()[-1].decode()
-        _rtts = _rtts.split(" ")[3].split("/")
-        rtts = {}
-        rtts['min'] = _rtts[0]
-        rtts['avg'] = _rtts[1]
-        rtts['max'] = _rtts[2]
-    else:
-        rtts = None
+        if not completed.returncode:
+            _rtts = completed.stdout.splitlines()[-1].decode()
+            _rtts = _rtts.split(" ")[3].split("/")
+            rtts['min'] = _rtts[0]
+            rtts['avg'] = _rtts[1]
+            rtts['max'] = _rtts[2]
+    except FileNotFoundError:
+        LOGGER.critical(f"Ping program not found")
 
     return rtts

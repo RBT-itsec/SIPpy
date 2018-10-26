@@ -7,7 +7,9 @@ TODO: add support for plugin configuration
 
 import json
 import logging
-from typing import Dict
+from typing import Dict, List
+
+from lib.objects import Target, Testcase
 
 import plugins
 
@@ -16,52 +18,54 @@ LOGGER = logging.getLogger("SIPpy.Config")
 
 
 class Config():
-    """ Represents the config for the tests """
-
     def __init__(self, filename=None):
         self.config = None
-        self._targets = {}
-        self.plugins = []
-        self._tests = {}
+        self._tests: List[Testcase] = []
+        self._targets: List[Target] = []
         if filename:
             self.from_file(filename)
 
     @property
-    def targets(self) -> Dict:
-        """ Return all the targets in the config """
+    def targets(self) -> List[Target]:
         return self._targets
 
     @targets.setter
-    # add types for second dict [str, List] ? accept also [str, str]
-    def targets(self, value: Dict[str, Dict]):
-        """ Set the targets and tests cases. """
-        # TODO: Move tests into separate property
+    def targets(self, value: Dict):
         if not value:
             LOGGER.critical(f"No target data in config")
         for target, options in value.items():
             _addr = options.get('addr')
             if not _addr:
-                LOGGER.warning(f"No address found for {target}")
+                LOGGER.warning(f"No adress found for {target}")
+            _tests = options.get('tests')
+            if not _tests:
+                LOGGER.warning(f"No tests found for {target}")
+            if _addr and _tests:
+                # self._targets[target] = _addr
+                self._targets.append(Target(name=target, addr=_addr))
 
+    @property
+    def tests(self) -> List[Testcase]:
+        return self._tests
+
+    @tests.setter
+    def tests(self, value: Dict):
+        for target, options in value.items():
+            _addr = options.get('addr')
             _tests = options.get('tests')
             if _tests:
                 if not isinstance(_tests, list):
                     _tests = list(_tests)
-                _failed = [test for test in _tests if test not in dir(plugins)]
-                _tests = [test for test in _tests if test in dir(plugins)]
-                if _failed:
-                    LOGGER.warning(f"Test(s) {_failed} not found as Plugin for target {target}.")
-                if _tests and _addr:
-                    self._targets[target] = _addr
-                    self._tests[target] = _tests
+                _unavailable = [t for t in _tests if t not in dir(plugins)]
+                _available = [t for t in _tests if t in dir(plugins)]
+                if _unavailable:
+                    LOGGER.warning(f"Test(s) {_unavailable} for target {target} not found as plugin")
+                if _addr and _available:
+                    for test in _available:
+                        self._tests.append(Testcase(name=test, target=Target(name=target, addr=_addr)))
             else:
-                LOGGER.warning(
-                    f"No tests found for target {target}. Removing from test config.")
+                LOGGER.warning(f"No tests found for target {target}")
 
-    @property
-    def tests(self) -> Dict:
-        """ Return all tests in the configuration """
-        return self._tests
 
     def from_file(self, filename: str):
         """ Read JSON config from file """
@@ -69,7 +73,69 @@ class Config():
         try:
             self.config = json.load(open(filename, 'r'))
             self.targets = self.config.get('targets')
+            self.tests = self.config.get('targets')
         except FileNotFoundError:
             LOGGER.critical(f"Configuration file {filename} not found!")
         except json.JSONDecodeError:
             LOGGER.critical(f"Could not decode data from {filename}!")
+
+
+# class Config():
+#     """ Represents the config for the tests """
+
+#     def __init__(self, filename=None):
+#         self.config = None
+#         self._targets = {}
+#         self.plugins = []
+#         self._tests = {}
+#         if filename:
+#             self.from_file(filename)
+
+#     @property
+#     def targets(self) -> Dict:
+#         """ Return all the targets in the config """
+#         return self._targets
+
+#     @targets.setter
+#     # add types for second dict [str, List] ? accept also [str, str]
+#     def targets(self, value: Dict[str, Dict]):
+#         """ Set the targets and tests cases. """
+#         # TODO: Move tests into separate property
+#         if not value:
+#             LOGGER.critical(f"No target data in config")
+#         for target, options in value.items():
+#             _addr = options.get('addr')
+#             if not _addr:
+#                 LOGGER.warning(f"No address found for {target}")
+
+#             _tests = options.get('tests')
+#             if _tests:
+#                 if not isinstance(_tests, list):
+#                     _tests = list(_tests)
+#                 _failed = [test for test in _tests if test not in dir(plugins)]
+#                 _tests = [test for test in _tests if test in dir(plugins)]
+#                 if _failed:
+#                     LOGGER.warning(
+#                         f"Test(s) {_failed} not found as Plugin for target {target}.")
+#                 if _tests and _addr:
+#                     self._targets[target] = _addr
+#                     self._tests[target] = _tests
+#             else:
+#                 LOGGER.warning(
+#                     f"No tests found for target {target}. Removing from test config.")
+
+#     @property
+#     def tests(self) -> Dict:
+#         """ Return all tests in the configuration """
+#         return self._tests
+
+#     def from_file(self, filename: str):
+#         """ Read JSON config from file """
+#         self.__init__()  # reset all configuration items
+#         try:
+#             self.config = json.load(open(filename, 'r'))
+#             self.targets = self.config.get('targets')
+#         except FileNotFoundError:
+#             LOGGER.critical(f"Configuration file {filename} not found!")
+#         except json.JSONDecodeError:
+#             LOGGER.critical(f"Could not decode data from {filename}!")

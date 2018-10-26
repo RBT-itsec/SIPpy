@@ -5,19 +5,19 @@
         }
     },
     "targets": {
-        "sbc": {
-            "addr": "8.8.8.8",
-            "tests": [
-                "base_check",
-                "ping"
-            ]
-        },
         "codec": {
             "addr": "192.168.23.1",
             "tests": [
                 "base_check",
                 "ping",
                 "foo"
+            ]
+        },
+        "sbc": {
+            "addr": "8.8.8.8",
+            "tests": [
+                "base_check",
+                "ping"
             ]
         },
         "foo": {

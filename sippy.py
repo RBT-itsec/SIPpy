@@ -24,18 +24,12 @@ def main() -> None:
     LOGGER.info(f"Lucky bits for today are: {randbits(42)}")
 
     config = Config("config.json")
-    # config.from_file("config.json")  # make prettier e.g. Config(filename)
-    # print(config.targets)
-    # print(config.tests)
 
-    for target, addr in config.targets.items():
-        tests = config.tests.get(target)
-        # print(f"Target {target} has tests: {tests}")
-        if tests:
-            for test in tests:
-                func = getattr(plugins, test)
-                result = func(addr)  # run the plugin with a given target
-                print(f"{test} on {addr}: {result}")
+    for testcase in config.tests:
+        func = getattr(plugins, testcase.name)
+        testcase.output = func(testcase.target.addr)
+        
+        print(testcase)
 
 
 if __name__ == "__main__":
