@@ -24,8 +24,6 @@ def base_check(target: str) -> Tuple[Optional[str], bool, Optional[str], Dict[st
     """ Do some basic checks (route, link, ...) """
     _gw, _dev = _gateway(target)
     _gw_reachable: bool = False
-    # if _gw:
-    # _gw, _dev = _gw  # unpack gateway and device
 
     if _dev:
         _dev_flags = _interface_state(_dev)
