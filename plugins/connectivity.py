@@ -38,24 +38,26 @@ def base_check(target: str):
 
 def _gateway(target: str) -> Tuple[Optional[str], Optional[str]]:
     """ Get gateway to address """
+    _gateway: Optional[str]
+    _interface: Optional[str]
     completed = subprocess.run(
         ["ip", "route", "get", target], capture_output=True)
     if not completed.returncode:
         route = completed.stdout.splitlines()[0].decode()
         if "via" in route:
             # Search for gateway
-            _gateway = GW_MATCH.search(route)
-            if _gateway:
-                _gateway = _gateway.group(1)
+            _gwmatch = GW_MATCH.search(route)
+            if _gwmatch and _gwmatch.group(1):
+                _gateway = _gwmatch.group(1)
             else:
                 _gateway = None
         else:
             _gateway = "local link"
 
         # Search for interface name
-        _interface = IF_MATCH.search(route)
-        if _interface:
-            _interface = _interface.group(1)
+        _ifmatch = IF_MATCH.search(route)
+        if _ifmatch and _ifmatch.group(1):
+            _interface = _ifmatch.group(1)
         else:
             _interface = None
     else:
@@ -69,7 +71,7 @@ def _interface_state(interface: str) -> Dict[str, Optional[str]]:
     """ Get interface state """
     _basepath = f"/sys/class/net/{interface}/"
 
-    flags = {'speed': None, 'operstate': None, 'duplex': None}
+    flags = {'speed': Optional[str], 'operstate': Optional[str], 'duplex': Optional[str]}
 
     for flag in flags:
         try:
@@ -82,8 +84,10 @@ def _interface_state(interface: str) -> Dict[str, Optional[str]]:
 
 
 @register_plugin
-def ping(target: str) -> bool:
+def ping(target: str) -> Optional[Dict[str, str]]:
     """ Run the ping command """
+    rtts: Optional[Dict[str, str]]
+    
     completed = subprocess.run(
         ['ping', '-c', '3', target], capture_output=True)
 
@@ -95,6 +99,6 @@ def ping(target: str) -> bool:
         rtts['avg'] = _rtts[1]
         rtts['max'] = _rtts[2]
     else:
-        rtts = False
+        rtts = None
     
     return rtts
