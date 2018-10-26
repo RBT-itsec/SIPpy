@@ -20,9 +20,9 @@ IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
 
 
 @register_plugin
-def base_check(target: str):
+def base_check(target: str) -> Tuple[Optional[str], bool, Optional[str], Dict[str, Optional[str]]]:
     """ Do some basic checks (route, link, ...) """
-    _gw, _dev = _gateway(target)
+    _gw, _gw_reachable, _dev = _gateway(target)
     # if _gw:
         # _gw, _dev = _gw  # unpack gateway and device
 
@@ -31,15 +31,17 @@ def base_check(target: str):
     else:
         _dev_flags = {'speed': None, 'operstate': None, 'duplex': None}  # TODO: dict fromkeys - also in devflags function
     # return gateway, interface and interface flags
-    return (_gw, _dev, _dev_flags)
+    return (_gw, _gw_reachable, _dev, _dev_flags)
     # else:
         # return False
 
 
-def _gateway(target: str) -> Tuple[Optional[str], Optional[str]]:
+def _gateway(target: str) -> Tuple[Optional[str], bool, Optional[str]]:
     """ Get gateway to address """
     _gateway: Optional[str]
     _interface: Optional[str]
+    _gateway_reachable: bool = False
+
     completed = subprocess.run(
         ["ip", "route", "get", target], capture_output=True)
     if not completed.returncode:
@@ -49,6 +51,9 @@ def _gateway(target: str) -> Tuple[Optional[str], Optional[str]]:
             _gwmatch = GW_MATCH.search(route)
             if _gwmatch and _gwmatch.group(1):
                 _gateway = _gwmatch.group(1)
+                # if we got a gateway, ping it
+                _gwtest = ping(_gateway)
+                _gateway_reachable = True if _gwtest else False
             else:
                 _gateway = None
         else:
@@ -62,9 +67,9 @@ def _gateway(target: str) -> Tuple[Optional[str], Optional[str]]:
             _interface = None
     else:
         LOGGER.critical(f"Route command failed with code {completed.returncode}")
-        return (None, None)
+        # return (None, None)
 
-    return (_gateway, _interface)
+    return (_gateway, _gateway_reachable, _interface)
 
 
 def _interface_state(interface: str) -> Dict[str, Optional[str]]:
