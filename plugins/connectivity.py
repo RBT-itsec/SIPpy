@@ -33,7 +33,7 @@ def base_check(target: str) -> Tuple[Optional[str], bool, Optional[str], Dict[st
         # TODO: dict fromkeys - also in devflags function
         _dev_flags = {'speed': None, 'operstate': None, 'duplex': None}
     if _gw and _gw != "link-local" and _dev_flags['operstate'] == "up":
-        _gateway_reachable = True if ping(_gw) else False
+        _gw_reachable = True if ping(_gw) else False
     # return gateway, interface and interface flags
     return (_gw, _gw_reachable, _dev, _dev_flags)
 
