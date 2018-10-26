@@ -18,11 +18,13 @@ LOGGER = logging.getLogger("SIPpy.Config")
 class Config():
     """ Represents the config for the tests """
 
-    def __init__(self):
+    def __init__(self, filename=None):
         self.config = None
         self._targets = {}
         self.plugins = []
         self._tests = {}
+        if filename:
+            self.from_file(filename)
 
     @property
     def targets(self) -> Dict:

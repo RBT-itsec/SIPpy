@@ -11,6 +11,7 @@ import logging
 
 from typing import Dict, Optional, Tuple
 
+from lib.objects import Testcase
 from . import register_plugin
 
 LOGGER = logging.getLogger("SIPpy.Connectivity")
@@ -20,7 +21,8 @@ IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
 
 
 @register_plugin
-def base_check(target: str) -> Tuple[Optional[str], bool, Optional[str], Dict[str, Optional[str]]]:
+# def base_check(target: str) -> Tuple[Optional[str], bool, Optional[str], Dict[str, Optional[str]]]:
+def base_check(target: str) -> Testcase:
     """ Do some basic checks (route, link, ...) """
     _gw, _dev = _gateway(target)
     _gw_reachable: bool = False
@@ -33,8 +35,12 @@ def base_check(target: str) -> Tuple[Optional[str], bool, Optional[str], Dict[st
     if _gw and _gw != "link-local" and _dev_flags['operstate'] == "up":
         _gw_reachable = True if ping(_gw) else False
     # return gateway, interface and interface flags
-    return (_gw, _gw_reachable, _dev, _dev_flags)
-
+    # return (_gw, _gw_reachable, _dev, _dev_flags)
+    return Testcase(name="base_check",
+                    target=target,
+                    code=all([_gw, _gw_reachable, _dev, _dev_flags]),
+                    blocking=True,
+                    output={'gateway': _gw, 'reachable': _gw_reachable, 'dev': _dev, 'flags': _dev_flags})
 
 
 def _gateway(target: str) -> Tuple[Optional[str], Optional[str]]:

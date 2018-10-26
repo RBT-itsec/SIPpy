@@ -23,8 +23,8 @@ def main() -> None:
     LOGGER.info(f"Checking weather forecast.")
     LOGGER.info(f"Lucky bits for today are: {randbits(42)}")
 
-    config = Config()
-    config.from_file("config.json")  # make prettier e.g. Config(filename)
+    config = Config("config.json")
+    # config.from_file("config.json")  # make prettier e.g. Config(filename)
     # print(config.targets)
     # print(config.tests)
 
