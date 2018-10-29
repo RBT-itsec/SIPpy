@@ -13,7 +13,7 @@ from . import register_plugin
 LOGGER = logging.getLogger("SIPpy.Performance")
 
 
-def _read_codecs_from_file(filename: str = './codecs2.json') -> Dict:
+def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
     """ Read codec information from file """
     codecs: Dict = {}
     try:
@@ -30,7 +30,9 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
     codecs = _read_codecs_from_file()
     if codecs and codec:
         args = codecs.get(codec)
-
+    else:
+        args = None
+    
     client = iperf3.Client()
     if args:
         for key, val in args.items():
