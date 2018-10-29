@@ -23,7 +23,6 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
     except json.JSONDecodeError:
         LOGGER.critical(f"Could not decode data from {filename}")
     
-    print("CODECS:", codecs)
     return codecs
 
 
@@ -43,7 +42,9 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
     client.server_hostname = target
     result = client.run()
 
-    if client.protocol == "udp":
+    if result.error:  # if we got error
+        result = {'error': result.error}
+    elif client.protocol == "udp":
         result = {'jitter': result.jitter_ms,
                   'lost_packets': result.lost_packets,
                   'lost_percent': result.lost_percent,
