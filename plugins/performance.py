@@ -39,7 +39,8 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
             setattr(client, key, val)
     client.server_hostname = target
     result = client.run()
-    if result.protocol == "udp":
+    
+    if client.protocol == "udp":
         result = {'jitter': result.jitter_ms,
                   'lost_packets': result.lost_packets,
                   'lost_percent': result.lost_percent,
