@@ -19,6 +19,7 @@ LOGGER = logging.getLogger("SIPpy.Config")
 
 class Config():
     """ Holds all configuration data for SIPpy """
+
     def __init__(self, filename=None):
         self.config = None
         self._blocking_tests: List[str] = []

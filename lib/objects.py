@@ -14,17 +14,19 @@ class Target():
 
 
 @dataclass
-class Testcase():
-    """ Represents a testcase """
-    name: str
-    target: Target
-    returncode: bool = False
-    blocking: bool = False
-    output: Dict = field(default_factory=dict)
-
-
-@dataclass
 class PluginConfig():
     """ Represents a plugins configuration """
     name: str
     options: Dict
+
+
+@dataclass
+class Testcase():
+    """ Represents a testcase """
+    name: str  # Name of the plugin to run
+    target: Target
+    # config: PluginConfig  # Testcase specific config or default config
+    returncode: bool = False
+    blocking: bool = False
+    output: Dict = field(default_factory=dict)
+    config: Dict = field(default_factory=dict)

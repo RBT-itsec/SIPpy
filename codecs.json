@@ -1,9 +1,16 @@
 {
-    "g711":{
-        "bandwidth": 2000000,
+    "g711": {
+        "bandwidth": 87200,
         "protocol": "udp",
         "num_streams": 1,
         "duration": 10,
         "port": 5001
-    }
+    },
+    "g729": {
+        "bandwidth": 31200,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 10,
+        "port": 5001
+    },
 }

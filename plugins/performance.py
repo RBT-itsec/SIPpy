@@ -1,48 +1,67 @@
 """
 Performance tests
 """
+# pylint: disable=W1203
 
-from typing import List, Dict, Callable, Tuple
+import json
+import logging
+from typing import Dict, Optional
 
 from lib import iperf3
 from . import register_plugin
 
+LOGGER = logging.getLogger("SIPpy.Performance")
 
-def _iperf(func: Callable):
-    def wrapper(*args: List, **kwargs: Dict):
-        target, options = func(*args, **kwargs)
-        client = iperf3.Client()
-        for key, val in options.items():
+
+def _read_codecs_from_file(filename: str = './codecs2.json') -> Dict:
+    """ Read codec information from file """
+    codecs: Dict = {}
+    try:
+        codecs = json.load(open(filename))
+    except FileNotFoundError:
+        LOGGER.critical(f"Can not find codec configuration file {filename}")
+    except json.JSONDecodeError:
+        LOGGER.critical(f"Could not decode data from {filename}")
+    return codecs
+
+
+def _iperf(target: str, codec: Optional[str] = None) -> Dict:
+    """ Run the iperf3 client """
+    codecs = _read_codecs_from_file()
+    if codecs and codec:
+        args = codecs.get(codec)
+
+    client = iperf3.Client()
+    if args:
+        for key, val in args.items():
             setattr(client, key, val)
-        client.server_hostname = target
-        # TODO: Server port -> config.json
-        result = client.run()
-        return result  # TODO: whole result, or just jitter, loss and bandwidth?
-    return wrapper
+    client.server_hostname = target
+    result = client.run()
+    if args.get("protocol") == "udp":
+        result = {'jitter': result.jitter_ms,
+                  'lost_packets': result.lost_packets,
+                  'lost_percent': result.lost_percent,
+                  'mbps': result.Mbps}
+    else:  # tcp - default
+        result = {'retransmits': result.retransmits,
+                  'sent_mbps': result.sent_Mbps,
+                  'rcvd_mbps': result.received_Mbps}
+    return result
 
 
 @register_plugin
-@_iperf
-def g711(target=str) -> Tuple[str, Dict]:
-    """ Profile of codec G711 """
-    # read codec profile from codecs.json
-    args = {'foo': 'bar'}
-    return target, args
+def g711(target: str) -> Dict:
+    """ Emulate the g711 codec """
+    return _iperf(target, 'g711')
 
-# # @register_plugin
-# def iperf(target: str) -> Dict:
-#     """ Run a simple IPerf3 UDP test """
-#     iperf_client = iperf3.Client()
-#     iperf_client.duration = 10
-#     iperf_client.server_hostname = target
-#     iperf_client.port = 5001
-#     iperf_client.num_streams = 1
-#     iperf_client.bandwidth = int(10e6)
-#     iperf_client.protocol = "udp"
 
-#     results = iperf_client.run()
+@register_plugin
+def g729(target: str) -> Dict:
+    """ Emulate the g729 codec """
+    return _iperf(target, 'g729')
 
-#     return {'jitter': results.jitter_ms,
-#             'packetloss': results.lost_packets,
-#             'packetloss_percent': results.lost_percent,
-#             'Mbps': results.Mbps}
+
+@register_plugin
+def perftest(target: str) -> Dict:
+    """ Run a maximum performance test """
+    return _iperf(target)

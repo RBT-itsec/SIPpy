@@ -1,8 +1,14 @@
 {
     "plugins": {
-        "blocking": ["base_check"],
+        "blocking": [
+            "base_check"
+        ],
         "ping": {
             "count": 3
+        },
+        "iperf": {
+            "duration": 10,
+            "num_streams": 1
         }
     },
     "targets": {
@@ -19,6 +25,12 @@
             "tests": [
                 "base_check",
                 "ping"
+            ]
+        },
+        "iperftest": {
+            "addr": "192.168.23.153",
+            "tests": [
+                "g711"
             ]
         },
         "foo": {
