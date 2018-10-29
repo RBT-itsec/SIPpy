@@ -1,6 +1,7 @@
 {
     "g711": {
         "bandwidth": 87200,
+        "blksize": 1280,
         "protocol": "udp",
         "num_streams": 1,
         "duration": 10
@@ -8,6 +9,7 @@
     "g729": {
         "bandwidth": 31200,
         "protocol": "udp",
+        "blksize": 160,
         "num_streams": 1,
         "duration": 10
     },

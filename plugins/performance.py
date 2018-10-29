@@ -45,7 +45,7 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
     if result.error:  # if we got error
         result = {'error': result.error}
     elif client.protocol == "udp":
-        result = {'jitter': result.jitter_ms,
+        result = {'jitter_ms': result.jitter_ms,
                   'lost_packets': result.lost_packets,
                   'lost_percent': result.lost_percent,
                   'mbps': result.Mbps}
