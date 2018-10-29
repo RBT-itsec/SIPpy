@@ -26,13 +26,14 @@ def main() -> None:
     config = Config("config.json")
 
     for testcase in config.tests:
+        LOGGER.info(f"Running test {testcase.name} against {testcase.target.name}")
         func = getattr(plugins, testcase.name)
         testcase.output = func(testcase.target.addr)
         testcase.returncode = all(testcase.output.values())
         if testcase.blocking and not testcase.returncode:
-            print(f"Error running blocking test {testcase.name}. Quitting.")
+            LOGGER.critical(f"Error running blocking test {testcase.name}. Quitting.")
             return
-        print(f"{testcase.target.name}: {testcase.name} = {testcase.output}")
+        LOGGER.info(f"{testcase.target.name}: {testcase.name} = {testcase.output}")
 
 
 
