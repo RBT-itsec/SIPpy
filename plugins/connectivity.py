@@ -19,8 +19,6 @@ LOGGER = logging.getLogger("SIPpy.Connectivity")
 GW_MATCH = re.compile(r'via (([0-9]{1,3}\.){3}[0-9]{1,3})')
 IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
 
-# TODO: add TCP full connect test. Find a way to pass optional port without changing config too much
-
 
 @register_plugin
 def base_check(target: str) -> Dict:
@@ -119,6 +117,8 @@ def ping(target: str) -> Dict[str, Optional[str]]:
 @register_plugin
 # TODO: accept more than one arg in plugins
 def tcp_port(target: str, port: int = 5060) -> bool:
+    """ Check if TCP port is reachable """
+    # TODO: Test it!
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(3)  # TODO: read from config
     connect = 1

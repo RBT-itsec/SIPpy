@@ -10,5 +10,13 @@
         "protocol": "udp",
         "num_streams": 1,
         "duration": 10
+    },
+    "perftest_tcp": {
+        "protocol": "tcp",
+        "num_streams": 1
+    },
+    "perftest_udp":{
+        "protocol": "udp",
+        "num_streams": 1
     }
 }

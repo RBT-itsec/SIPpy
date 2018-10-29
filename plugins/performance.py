@@ -22,7 +22,7 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
         LOGGER.critical(f"Can not find codec configuration file {filename}")
     except json.JSONDecodeError:
         LOGGER.critical(f"Could not decode data from {filename}")
-    
+
     return codecs
 
 
@@ -33,7 +33,7 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
         args = codecs.get(codec)
     else:
         args = None
-    
+
     client = iperf3.Client()
     if args:
         for key, val in args.items():
@@ -69,6 +69,12 @@ def g729(target: str) -> Dict:
 
 
 @register_plugin
-def perftest(target: str) -> Dict:
+def perftest_tcp(target: str) -> Dict:
     """ Run a maximum performance test """
-    return _iperf(target)
+    return _iperf(target, 'perftest_tcp')
+
+
+@register_plugin
+def perftest_udp(target: str) -> Dict:
+    """ Run a maximum performance test """
+    return _iperf(target, 'perftest_udp')
