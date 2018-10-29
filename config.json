@@ -29,7 +29,6 @@
         "iperftest": {
             "addr": "192.168.23.153",
             "tests": [
-                "g711",
                 "aac_ld_stereo",
                 "perftest_udp"
             ]

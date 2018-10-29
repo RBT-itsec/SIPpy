@@ -6,9 +6,10 @@ Performance tests
 import json
 import logging
 from typing import Dict, Optional
+from functools import partial
 
 from lib import iperf3
-from . import register_plugin
+from . import register_plugin, PLUGINS
 
 LOGGER = logging.getLogger("SIPpy.Performance")
 
@@ -28,11 +29,12 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
 
 def _iperf(target: str, codec: Optional[str] = None) -> Dict:
     """ Run the iperf3 client """
-    codecs = _read_codecs_from_file()
-    if codecs and codec:
-        args = codecs.get(codec)
-    else:
-        args = None
+    # codecs = _read_codecs_from_file()
+    # if codecs and codec:
+    #     args = codecs.get(codec)
+    # else:
+    #     args = None
+    args = codec
 
     client = iperf3.Client()
     if args:
@@ -57,26 +59,29 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
 
 
 # Create plugins for codecs in codecs.json
+# Sideload them into plugins - TODO: Needs restart !!!
+for codec, config in _read_codecs_from_file().items():
+    PLUGINS[codec] = partial(_iperf, codec=config)
 
-@register_plugin
-def g711(target: str) -> Dict:
-    """ Emulate the g711 codec """
-    return _iperf(target, 'g711')
-
-
-@register_plugin
-def g729(target: str) -> Dict:
-    """ Emulate the g729 codec """
-    return _iperf(target, 'g729')
+# @register_plugin
+# def g711(target: str) -> Dict:
+#     """ Emulate the g711 codec """
+#     return _iperf(target, 'g711')
 
 
-@register_plugin
-def perftest_tcp(target: str) -> Dict:
-    """ Run a maximum performance test """
-    return _iperf(target, 'perftest_tcp')
+# @register_plugin
+# def g729(target: str) -> Dict:
+#     """ Emulate the g729 codec """
+#     return _iperf(target, 'g729')
 
 
-@register_plugin
-def perftest_udp(target: str) -> Dict:
-    """ Run a maximum performance test """
-    return _iperf(target, 'perftest_udp')
+# @register_plugin
+# def perftest_tcp(target: str) -> Dict:
+#     """ Run a maximum performance test """
+#     return _iperf(target, 'perftest_tcp')
+
+
+# @register_plugin
+# def perftest_udp(target: str) -> Dict:
+#     """ Run a maximum performance test """
+#     return _iperf(target, 'perftest_udp')
