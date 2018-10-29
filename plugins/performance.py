@@ -22,6 +22,8 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
         LOGGER.critical(f"Can not find codec configuration file {filename}")
     except json.JSONDecodeError:
         LOGGER.critical(f"Could not decode data from {filename}")
+    
+    print("CODECS:", codecs)
     return codecs
 
 
