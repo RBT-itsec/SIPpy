@@ -1,4 +1,52 @@
 {
+    "aac_ld_mono": {
+        "bandwidth": 128000,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 30
+    },
+    "aac_ld_stereo": {
+        "bandwidth": 256000,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 30
+    },
+    "aac_lc_mono": {
+        "bandwidth": 64000,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 30
+    },
+    "aac_lc_stereo": {
+        "bandwidth": 128000,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 30
+    },
+    "aac_he_mono": {
+        "bandwidth": 56000,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 30
+    },
+    "aac_he_stereo": {
+        "bandwidth": 64000,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 30
+    },
+    "mpeg1_l2_mono": {
+        "bandwidth": 128000,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 30
+    },
+    "mpeg1_l2_stereo": {
+        "bandwidth": 384000,
+        "protocol": "udp",
+        "num_streams": 1,
+        "duration": 30
+    },
     "g711": {
         "bandwidth": 87200,
         "blksize": 1280,
@@ -17,7 +65,7 @@
         "protocol": "tcp",
         "num_streams": 1
     },
-    "perftest_udp":{
+    "perftest_udp": {
         "protocol": "udp",
         "num_streams": 1
     }
