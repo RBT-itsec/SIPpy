@@ -30,7 +30,9 @@
         "iperftest": {
             "addr": "192.168.23.153",
             "tests": [
-                "g711"
+                "g711",
+                "perftest_tcp",
+                "perftest_udp"
             ]
         },
         "foo": {
