@@ -56,6 +56,8 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
     return result
 
 
+# Create plugins for codecs in codecs.json
+
 @register_plugin
 def g711(target: str) -> Dict:
     """ Emulate the g711 codec """

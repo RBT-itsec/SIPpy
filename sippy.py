@@ -32,7 +32,7 @@ def main() -> None:
         if testcase.blocking and not testcase.returncode:
             print(f"Error running blocking test {testcase.name}. Quitting.")
             return
-        print(f"{testcase.target.name}: {testcase.name} =  {testcase.output}")
+        print(f"{testcase.target.name}: {testcase.name} = {testcase.output}")
 
 
 

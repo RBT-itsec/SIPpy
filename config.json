@@ -17,7 +17,6 @@
             "tests": [
                 "base_check",
                 "ping",
-                "foo"
             ]
         },
         "sbc": {
@@ -34,10 +33,6 @@
                 "perftest_tcp",
                 "perftest_udp"
             ]
-        },
-        "foo": {
-            "addr": "1.1.1.1",
-            "tests": []
         }
     }
 }
