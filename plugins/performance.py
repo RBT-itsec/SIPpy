@@ -60,8 +60,8 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
 
 # Create plugins for codecs in codecs.json
 # Sideload them into plugins - TODO: Needs restart !!!
-for codec, config in _read_codecs_from_file().items():
-    PLUGINS[codec] = partial(_iperf, codec=config)
+for _codec, _config in _read_codecs_from_file().items():
+    PLUGINS[_codec] = partial(_iperf, codec=_config)
 
 # @register_plugin
 # def g711(target: str) -> Dict:
