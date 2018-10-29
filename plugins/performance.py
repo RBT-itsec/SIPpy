@@ -9,7 +9,7 @@ from typing import Dict, Optional
 from functools import partial
 
 from lib import iperf3
-from . import register_plugin, PLUGINS
+from . import PLUGINS
 
 LOGGER = logging.getLogger("SIPpy.Performance")
 
@@ -29,16 +29,10 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
 
 def _iperf(target: str, codec: Optional[str] = None) -> Dict:
     """ Run the iperf3 client """
-    # codecs = _read_codecs_from_file()
-    # if codecs and codec:
-    #     args = codecs.get(codec)
-    # else:
-    #     args = None
-    args = codec
 
     client = iperf3.Client()
-    if args:
-        for key, val in args.items():
+    if codec:
+        for key, val in codec.items():
             setattr(client, key, val)
 
     client.server_hostname = target
@@ -62,26 +56,3 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
 # Sideload them into plugins - TODO: Needs restart !!!
 for _codec, _config in _read_codecs_from_file().items():
     PLUGINS[_codec] = partial(_iperf, codec=_config)
-
-# @register_plugin
-# def g711(target: str) -> Dict:
-#     """ Emulate the g711 codec """
-#     return _iperf(target, 'g711')
-
-
-# @register_plugin
-# def g729(target: str) -> Dict:
-#     """ Emulate the g729 codec """
-#     return _iperf(target, 'g729')
-
-
-# @register_plugin
-# def perftest_tcp(target: str) -> Dict:
-#     """ Run a maximum performance test """
-#     return _iperf(target, 'perftest_tcp')
-
-
-# @register_plugin
-# def perftest_udp(target: str) -> Dict:
-#     """ Run a maximum performance test """
-#     return _iperf(target, 'perftest_udp')

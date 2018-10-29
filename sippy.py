@@ -23,6 +23,9 @@ def main() -> None:
     LOGGER.info(f"Checking weather forecast.")
     LOGGER.info(f"Lucky bits for today are: {randbits(42)}")
 
+    LOGGER.info(f"The following plugins are available: {dir(plugins)}")
+
+    LOGGER.info(f"Loading configuration")
     config = Config("config.json")
 
     for testcase in config.tests:
