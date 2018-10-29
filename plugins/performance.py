@@ -34,21 +34,15 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
         args = codecs.get(codec)
     else:
         args = None
-
-    print("ARGS:", args)
     
     client = iperf3.Client()
     if args:
         for key, val in args.items():
             setattr(client, key, val)
 
-    print("CLIENT", vars(client))
-
     client.server_hostname = target
     result = client.run()
-    
-    print("CLIENT PROTO:", client.protocol, type(client.protocol))
-    return
+
     if client.protocol == "udp":
         result = {'jitter': result.jitter_ms,
                   'lost_packets': result.lost_packets,
