@@ -40,7 +40,7 @@ def _iperf(target: str, codec: Optional[str] = None) -> Dict:
     client.server_hostname = target
     result = client.run()
     
-    print("CLIENT PROTO": client.protocol, type(client.protocol))
+    print("CLIENT PROTO:", client.protocol, type(client.protocol))
     return
     if client.protocol == "udp":
         result = {'jitter': result.jitter_ms,
