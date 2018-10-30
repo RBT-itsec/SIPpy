@@ -90,6 +90,7 @@
     "perftest_udp": {
         "bandwidth": 0,
         "protocol": "udp",
+        "blksize": 1024,
         "num_streams": 1
     }
 }
