@@ -1,4 +1,25 @@
 {
+    "aptx_16bit": {
+        "bandwidth": 416000,
+        "protocol": "udp",
+        "blksize": 4160,
+        "num_streams": 1,
+        "duration": 30
+    },
+    "aptx_24bit": {
+        "bandwidth": 608000,
+        "protocol": "udp",
+        "blksize": 6080,
+        "num_streams": 1,
+        "duration": 30
+    },
+    "linear_2500kbps": {
+        "bandwidth": 2384000,
+        "protocol": "udp",
+        "blksize": 9536,
+        "num_streams": 1,
+        "duration": 30
+    },
     "aac_ld_mono": {
         "bandwidth": 128000,
         "protocol": "udp",
