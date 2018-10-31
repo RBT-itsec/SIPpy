@@ -1,6 +1,9 @@
 """
 
 (c) jakob.pfister@rbt-nbg.de
+TODO: Add argparse
+TODO: Add CLI frontend
+TODO: optional add GUI frontend
 """
 # pylint: disable=W1203
 
@@ -27,17 +30,19 @@ def main() -> None:
 
     LOGGER.info(f"Loading configuration")
     config = Config("config.json")
-    
+
     for testcase in config.tests:
-        LOGGER.info(f"Running test {testcase.name} against {testcase.target.name}")
+        LOGGER.info(
+            f"Running test {testcase.name} against {testcase.target.name}")
         func = getattr(plugins, testcase.name)
         testcase.output = func(testcase.target.addr)
         testcase.returncode = all(testcase.output.values())
         if testcase.blocking and not testcase.returncode:
-            LOGGER.critical(f"Error running blocking test {testcase.name}. Quitting.")
+            LOGGER.critical(
+                f"Error running blocking test {testcase.name}. Quitting.")
             return
-        LOGGER.info(f"{testcase.target.name}: {testcase.name} = {testcase.output}")
-
+        LOGGER.info(
+            f"{testcase.target.name}: {testcase.name} = {testcase.output}")
 
 
 if __name__ == "__main__":

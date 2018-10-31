@@ -14,6 +14,7 @@ PLUGINS: Dict[str, Dict] = defaultdict(dict)
 
 
 def register_plugin(category: str) -> Callable:
+    """ Register function with category """
     def function_wrapper(func: Callable):
         """ Decorator to register functions """
         name: str = func.__name__
@@ -47,6 +48,9 @@ def categories() -> List[str]:
     """ List available categories """
     return list({x['category'] for x in PLUGINS.values() if x.get('category')})
 
+def get_category(name: str) -> str:
+    """ Return the category of a given plugin name """
+    return PLUGINS[name].get('category')
 
 def _import_plugins() -> None:
     """ Import all resources to register plugins """

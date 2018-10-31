@@ -19,6 +19,8 @@ LOGGER = logging.getLogger("SIPpy.Connectivity")
 GW_MATCH = re.compile(r'via (([0-9]{1,3}\.){3}[0-9]{1,3})')
 IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
 
+# add plugin for changing local network configuration
+
 
 @register_plugin("connectivity")
 def base_check(target: str) -> Dict:
@@ -131,4 +133,3 @@ def tcp_port_5060(target: str) -> Dict:
 
     result = {'connect': True if not connect else False}
     return result
-    
