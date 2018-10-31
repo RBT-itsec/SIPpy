@@ -1,5 +1,13 @@
 """
 Performance tests
+
+config.json:
+Needed fields
+ * bandwidth: Bandwidth in bits/second
+ * protocol: "udp" or "tcp"
+ * blksize: bandwidth / packets_per_second / 8 (needs bytes!)
+ * num_streams: Number of streams to use (each stream has bandwidth)
+ * duration: Test duration. Use >30s for correct jitter measurement (udp)
 """
 # pylint: disable=W1203
 
@@ -27,9 +35,8 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
     return codecs
 
 
-def _iperf(target: str, codec: Optional[str] = None) -> Dict:
+def _iperf(target: str, codec: Optional[Dict] = None) -> Dict:
     """ Run the iperf3 client """
-
     client = iperf3.Client()
     if codec:
         for key, val in codec.items():
