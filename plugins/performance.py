@@ -62,4 +62,8 @@ def _iperf(target: str, codec: Optional[Dict] = None) -> Dict:
 # Create plugins for codecs in codecs.json
 # Sideload them into plugins - TODO: Needs restart !!!
 for _codec, _config in _read_codecs_from_file().items():
-    PLUGINS[_codec] = partial(_iperf, codec=_config)
+    PLUGINS[_codec]['func'] = partial(_iperf, codec=_config)
+    if _config.get('protocol') ==  "udp":
+        PLUGINS[_codec]['category'] = "udpcodec"
+    else:
+        PLUGINS[_codec]['category'] = "tcpcodec"

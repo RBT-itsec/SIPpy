@@ -27,7 +27,7 @@ def main() -> None:
 
     LOGGER.info(f"Loading configuration")
     config = Config("config.json")
-
+    
     for testcase in config.tests:
         LOGGER.info(f"Running test {testcase.name} against {testcase.target.name}")
         func = getattr(plugins, testcase.name)

@@ -20,7 +20,7 @@ GW_MATCH = re.compile(r'via (([0-9]{1,3}\.){3}[0-9]{1,3})')
 IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
 
 
-@register_plugin
+@register_plugin("connectivity")
 def base_check(target: str) -> Dict:
     """ Do some basic checks (route, link, ...) """
     _gwcheck = _gateway(target)
@@ -93,7 +93,7 @@ def _interface_state(interface: Optional[str]) -> Dict[str, Optional[str]]:
     return flags
 
 
-@register_plugin
+@register_plugin("connectivity")
 def ping(target: str) -> Dict[str, Optional[str]]:
     """ Run the ping command """
     rtts: Dict[str, Optional[str]] = {'min': None, 'avg': None, 'max': None}
@@ -114,17 +114,21 @@ def ping(target: str) -> Dict[str, Optional[str]]:
     return rtts
 
 
-@register_plugin
+@register_plugin("connectivity")
 # TODO: accept more than one arg in plugins
-def tcp_port(target: str, port: int = 5060) -> bool:
+def tcp_port_5060(target: str) -> Dict:
     """ Check if TCP port is reachable """
     # TODO: Test it!
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(3)  # TODO: read from config
     connect = 1
     try:
-        connect = sock.connect_ex((target, port))  # return 0 if successfull
+        connect = sock.connect_ex((target, 5060))  # return 0 if successfull
     except socket.gaierror:
         LOGGER.warning(f"Unable to resolve address of {target}")
+    finally:
+        sock.close()
 
-    return False if connect else True
+    result = {'connect': True if not connect else False}
+    return result
+    
