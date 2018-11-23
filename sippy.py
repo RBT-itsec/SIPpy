@@ -34,15 +34,19 @@ def main() -> None:
     for testcase in config.tests:
         LOGGER.info(
             f"Running test {testcase.name} against {testcase.target.name}")
-        func = getattr(plugins, testcase.name)
-        testcase.output = func(testcase.target.addr)
-        testcase.returncode = all(testcase.output.values())
+        plugin = getattr(plugins, testcase.name)
+        # print(testcase.name, plugin, plugin.config)
+        testcase.output = plugin.run(testcase.target.addr)
+        if testcase.output:
+            testcase.returncode = all(testcase.output.values())
+        else:
+            testcase.returncode = False
         if testcase.blocking and not testcase.returncode:
             LOGGER.critical(
                 f"Error running blocking test {testcase.name}. Quitting.")
             return
         LOGGER.info(
-            f"{testcase.target.name}: {testcase.name} = {testcase.output}")
+           f"{testcase.target.name}: {testcase.name} = {testcase.output}")
 
 
 if __name__ == "__main__":

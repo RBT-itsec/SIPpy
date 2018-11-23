@@ -17,9 +17,18 @@ from typing import Dict, Optional
 from functools import partial
 
 from lib import iperf3
-from . import PLUGINS
+from . import register_plugin, Plugin
 
 LOGGER = logging.getLogger("SIPpy.Performance")
+
+
+class IperfCodec(Plugin):
+    name = "iperfcodec"
+    category = "codec"
+    config: Dict = {}
+
+    def _run(self, target: str):
+        return _iperf(target, self.config)
 
 
 def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
@@ -59,11 +68,9 @@ def _iperf(target: str, codec: Optional[Dict] = None) -> Dict:
     return result
 
 
-# Create plugins for codecs in codecs.json
-# Sideload them into plugins - TODO: Needs restart !!!
-for _codec, _config in _read_codecs_from_file().items():
-    PLUGINS[_codec]['func'] = partial(_iperf, codec=_config)
-    if _config.get('protocol') == "udp":
-        PLUGINS[_codec]['category'] = "udpcodec"
-    else:
-        PLUGINS[_codec]['category'] = "tcpcodec"
+for codec, config in _read_codecs_from_file().items():
+    _codec = IperfCodec()
+    _codec.name = codec
+    _codec.config = config
+    _codec.output = {}
+    register_plugin(_codec)

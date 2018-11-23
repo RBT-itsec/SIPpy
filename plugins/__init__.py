@@ -8,30 +8,43 @@ from importlib import resources
 from collections import defaultdict
 from pathlib import Path
 
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Any
 
-PLUGINS: Dict[str, Dict] = defaultdict(dict)
-
-
-def register_plugin(category: str) -> Callable:
-    """ Register function with category """
-    def function_wrapper(func: Callable):
-        """ Decorator to register functions """
-        name: str = func.__name__
-        PLUGINS[name]['func'] = func
-        PLUGINS[name]['category'] = category
-        return func
-    return function_wrapper
+# PLUGINS: Dict[str, Dict[str, Any]] = defaultdict(dict)
+PLUGINS = {}
 
 
-def __getattr__(name: str) -> Callable:
+class Plugin():  # TODO: Change to instance attributes instead
+    # class attributes?!
+    name: str = "plugin"
+    category: str = "generic"
+    config: Dict = {}
+    output: Dict
+
+    def run(self, target: str):
+        return self._run(target)
+
+    def _run(self, target: str):
+        print(f"{self.name} running: {self}")
+
+
+def register_plugin(cls):
+    name = cls.name
+    if isinstance(cls, Plugin):
+        PLUGINS[name] = cls
+    else:
+        PLUGINS[name] = cls()
+    return cls
+
+
+def __getattr__(name: str) -> Plugin:
     """ Return a named plugin """
     try:
-        return PLUGINS[name]['func']
+        return PLUGINS[name]
     except KeyError:
         _import_plugins()
         if name in PLUGINS:
-            return PLUGINS[name]['func']
+            return PLUGINS[name]
         else:
             raise AttributeError(
                 f'module {__name__!r} has no attribute {name!r}'
@@ -43,14 +56,6 @@ def __dir__() -> List[str]:
     _import_plugins()
     return list(PLUGINS.keys())
 
-
-def categories() -> List[str]:
-    """ List available categories """
-    return list({x['category'] for x in PLUGINS.values() if x.get('category')})
-
-def get_category(name: str) -> str:
-    """ Return the category of a given plugin name """
-    return PLUGINS[name].get('category')
 
 def _import_plugins() -> None:
     """ Import all resources to register plugins """
