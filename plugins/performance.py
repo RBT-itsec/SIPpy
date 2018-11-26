@@ -14,7 +14,7 @@ Needed fields
 import json
 import logging
 from typing import Dict, Optional
-from functools import partial
+# from functools import partial
 
 from lib import iperf3
 from . import register_plugin, Plugin
@@ -23,11 +23,15 @@ LOGGER = logging.getLogger("SIPpy.Performance")
 
 
 class IperfCodec(Plugin):
+    """ IPerf generic plugin """
     name = "iperfcodec"
     category = "codec"
-    config: Dict = {}
+
+    def __init__(self):
+        super().__init__()
 
     def _run(self, target: str):
+        """ Run the plugin """
         return _iperf(target, self.config)
 
 

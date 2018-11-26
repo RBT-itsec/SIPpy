@@ -24,12 +24,15 @@ IF_MATCH = re.compile(r'dev ([a-z0-9]+)\s')
 
 @register_plugin
 class BaseCheck(Plugin):
+    """ Basic Checks """
     name: str = "base_check"
     category: str = "connectivity"
-    config: Dict = {}
-    output: Dict = {}
 
-    def _run(self, target: str):
+    def __init__(self):
+        super().__init__()
+
+    def _run(self, target: str):  # rename base_check to _run
+        """ Run the plugin """
         return self.base_check(target)
 
     def base_check(self, target: str) -> Dict:
@@ -112,10 +115,12 @@ class BaseCheck(Plugin):
 
 @register_plugin
 class Ping(Plugin):
+    """ Ping a remote target """
     name: str = "ping"
     category: str = "connectivity"
-    config: Dict = {}
-    output: Dict = {}
+
+    def __init__(self):
+        super().__init__()
 
     def _run(self, target: str):
         return self.ping(target)

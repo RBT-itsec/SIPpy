@@ -16,15 +16,20 @@ PLUGINS = {}
 
 class Plugin():  # TODO: Change to instance attributes instead
     # class attributes?!
+    """ Generic Plugin """
     name: str = "plugin"
     category: str = "generic"
-    config: Dict = {}
-    output: Dict
+
+    def __init__(self):
+        self.config = {}
+        self.output = {}
 
     def run(self, target: str):
+        """ Meta-method for running the plugin """
         return self._run(target)
 
     def _run(self, target: str):
+        """ Run the plugin """
         print(f"{self.name} running: {self}")
 
 
