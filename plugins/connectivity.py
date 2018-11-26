@@ -30,7 +30,7 @@ class BaseCheck(Plugin):
     output: Dict = {}
 
     def _run(self, target: str):
-        self.base_check(target)
+        return self.base_check(target)
 
     def base_check(self, target: str) -> Dict:
         """ Do some basic checks (route, link, ...) """
