@@ -5,6 +5,8 @@ Common objects
 from dataclasses import dataclass, field
 from typing import Dict
 
+from plugins import Plugin
+
 
 @dataclass
 class Target():
@@ -25,7 +27,8 @@ class Testcase():
     """ Represents a testcase """
     name: str  # Name of the plugin to run
     target: Target
-    category: str = "generic"  # Name of the plugins category
+    plugin: Plugin
+    # category: str = "generic"  # Name of the plugins category
     # config: PluginConfig  # Testcase specific config or default config
     returncode: bool = False
     blocking: bool = False

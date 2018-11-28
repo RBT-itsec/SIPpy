@@ -14,10 +14,10 @@ class CLIOutput():
     @classmethod
     def report(cls, testcase: Testcase):
         """ Report the results of a testcase """
-        if testcase.category == "codec":  # if testcase is codec, store it
+        if testcase.plugin.category == "codec":  # if testcase is codec, store it
             cls.codecreports[testcase.name] = testcase.output
-
-        print(testcase.output)
+        else:  # if no codec
+            print(testcase.output)
 
     @classmethod
     def report_codecs(cls):

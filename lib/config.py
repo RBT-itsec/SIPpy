@@ -85,12 +85,13 @@ class Config():
                         f"Test(s) {_unavailable} for target {target} not found as plugin")
                 if _addr and _available:
                     for test in _available:
+                        _plugin = getattr(plugins, test)
                         if test in self.blocking_tests:
                             self._tests.append(Testcase(name=test, target=Target(
-                                name=target, addr=_addr), blocking=True))
+                                name=target, addr=_addr), plugin=_plugin, blocking=True))
                         else:
                             self._tests.append(Testcase(name=test, target=Target(
-                                name=target, addr=_addr)))
+                                name=target, addr=_addr), plugin=_plugin))
             else:
                 LOGGER.warning(f"No tests found for target {target}")
 
