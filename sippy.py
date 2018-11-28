@@ -35,9 +35,6 @@ def main() -> None:
     for testcase in config.tests:
         LOGGER.info(
             f"Running test {testcase.name} against {testcase.target.name}")
-        # plugin = getattr(plugins, testcase.name)
-        # print(testcase.name, plugin, plugin.config)
-        # testcase.category = plugin.category
         testcase.output = testcase.plugin.run(testcase.target.addr)
         if testcase.output:
             testcase.returncode = all(testcase.output.values())
@@ -50,7 +47,7 @@ def main() -> None:
         # LOGGER.info(
         #    f"{testcase.target.name}: {testcase.name} = {testcase.output}")
         CLIOutput.report(testcase)
-    
+
     # finally report codec tests
     CLIOutput.report_codecs()
 

@@ -30,7 +30,7 @@ class Plugin():  # TODO: Change to instance attributes instead
 
     def _run(self, target: str):
         """ Run the plugin """
-        print(f"{self.name} running: {self}")
+        print(f"{self.name} running: {target}")
 
 
 def register_plugin(cls):

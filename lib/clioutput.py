@@ -1,15 +1,17 @@
-""" 
+"""
 CLI Output of test results
 """
 
 from lib.objects import Testcase
 from typing import Dict
 
+
 class CLIOutput():
+    """ Simple CLI output """
     codecreports: Dict = {}
 
     # def __init__(self):
-        # self.codecreports = {}
+    # self.codecreports = {}
 
     @classmethod
     def report(cls, testcase: Testcase):
