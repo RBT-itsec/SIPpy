@@ -14,6 +14,7 @@ from secrets import randbits
 
 import plugins
 from lib.config import Config
+from lib.clioutput import CLIOutput
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -45,8 +46,9 @@ def main() -> None:
             LOGGER.critical(
                 f"Error running blocking test {testcase.name}. Quitting.")
             return
-        LOGGER.info(
-           f"{testcase.target.name}: {testcase.name} = {testcase.output}")
+        # LOGGER.info(
+        #    f"{testcase.target.name}: {testcase.name} = {testcase.output}")
+        CLIOutput.report(testcase)
 
 
 if __name__ == "__main__":

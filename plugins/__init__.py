@@ -21,8 +21,8 @@ class Plugin():  # TODO: Change to instance attributes instead
     category: str = "generic"
 
     def __init__(self):
-        self.config = {}
-        self.output = {}
+        self.config = {}  # really needed?
+        self.output = {}  # really needed?
 
     def run(self, target: str):
         """ Meta-method for running the plugin """

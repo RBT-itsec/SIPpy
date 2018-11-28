@@ -48,7 +48,7 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
     return codecs
 
 
-def _iperf(target: str, codec: Optional[Dict] = None) -> Dict:
+def _iperf(target: str, codec: Optional[Dict] = None) -> Dict:  # move into class
     """ Run the iperf3 client """
     client = iperf3.Client()
     if codec:
