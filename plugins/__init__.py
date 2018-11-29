@@ -1,6 +1,6 @@
 """
 Handle automatic plugin registration for this folder
-via @register_plugin(<category>) decorator
+via @register_plugin or direct call of register_plugin
 """
 
 from importlib import import_module
