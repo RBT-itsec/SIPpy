@@ -8,21 +8,24 @@ from importlib import resources
 from collections import defaultdict
 from pathlib import Path
 
-from typing import Callable, Dict, List, Any
+from typing import Callable, Dict, List, Any, TypeVar, Type, Union
 
-# PLUGINS: Dict[str, Dict[str, Any]] = defaultdict(dict)
+
 PLUGINS = {}
 
 
-class Plugin():  # TODO: Change to instance attributes instead
-    # class attributes?!
+# Create Type PluginT for subclasses of Plugin without instance
+PluginT = TypeVar('PluginT', bound='Plugin')
+
+
+class Plugin():
     """ Generic Plugin """
     name: str = "plugin"
     category: str = "generic"
 
     def __init__(self):
-        self.config = {}  # really needed?
-        self.output = {}  # really needed?
+        self.config: Dict = {}
+        self.output: Dict = {}
 
     def run(self, target: str):
         """ Meta-method for running the plugin """
@@ -33,8 +36,12 @@ class Plugin():  # TODO: Change to instance attributes instead
         print(f"{self.name} running: {target}")
 
 
-def register_plugin(cls):
+# typing: Type[PluginT] for class/subclass, Plugin for instance/instance of subclass
+def register_plugin(cls: Union[Type[PluginT], Plugin]):
+    """ Register a class as plugin """
     name = cls.name
+    # if we alreade have an instance, keep it
+    # otherwise create one
     if isinstance(cls, Plugin):
         PLUGINS[name] = cls
     else:

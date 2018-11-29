@@ -2,9 +2,13 @@
 Handle reporting of testcases
 """
 
-from .objects import Testcase
-from .output import Output
 from typing import List
+
+from typing import Type
+from .objects import Testcase
+from .output import OutputT
+
+
 
 class ReportHandler():
     """ Handle reporting of Testcases """
@@ -26,11 +30,9 @@ class ReportHandler():
             cls.codec_reports.append(testcase)
 
     @classmethod
-    def report(cls, output: Output):
+    def report(cls, output: Type[OutputT]):
         """ Report all the testcases """
         for report in cls.connectivity_reports:
             output.report_connectivity(report)
-            # print(report, report.plugin.config)
         for report in cls.codec_reports:
             output.report_codec(report)
-            # print(report, report.plugin.config)

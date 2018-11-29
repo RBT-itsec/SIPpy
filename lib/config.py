@@ -21,12 +21,17 @@ class Config():
     """ Holds all configuration data for SIPpy """
 
     def __init__(self, filename=None):
+        self.filename = filename
+        self.setup()
+        if self.filename:
+            self.from_file(self.filename)
+
+    def setup(self):
+        """ Setup/clear all elements """
         self.config = None
         self._blocking_tests: List[str] = []
         self._tests: List[Testcase] = []
         self._targets: List[Target] = []
-        if filename:
-            self.from_file(filename)
 
     @property
     def blocking_tests(self) -> List[str]:
@@ -96,7 +101,7 @@ class Config():
 
     def from_file(self, filename: str):
         """ Read JSON config from file """
-        self.__init__()  # reset all configuration items
+        self.setup()  # reset all configuration items
         try:
             self.config = json.load(open(filename, 'r'))
             self.blocking_tests = self.config.get('plugins')

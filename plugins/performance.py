@@ -52,11 +52,11 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
     return codecs
 
 
-def _iperf(target: str, codec: Optional[Dict] = None) -> Dict:  # move into class
+def _iperf(target: str, codec_config: Optional[Dict] = None) -> Dict:  # move into class
     """ Run the iperf3 client """
     client = iperf3.Client()
-    if codec:
-        for key, val in codec.items():
+    if codec_config:
+        for key, val in codec_config.items():
             setattr(client, key, val)
 
     client.server_hostname = target

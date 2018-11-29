@@ -2,8 +2,13 @@
 CLI Output of test results
 """
 
+from typing import TypeVar
+
 from lib.objects import Testcase
-from typing import Dict
+
+
+# Use Type[T] when using @classmethod/class, else just T for instances
+OutputT = TypeVar('OutputT', bound='Output')
 
 
 class Output():

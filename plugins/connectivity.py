@@ -7,7 +7,7 @@ Each exported plugin needs to accept the target system as _one_ parameter.
 
 import subprocess
 import re
-import socket
+# import socket
 import logging
 
 from typing import Dict, Optional
@@ -152,22 +152,3 @@ class Ping(Plugin):
             LOGGER.critical(f"Ping program not found")
 
         return rtts
-
-
-# @register_plugin("connectivity")
-# # TODO: accept more than one arg in plugins
-# def tcp_port_5060(target: str) -> Dict:
-#     """ Check if TCP port is reachable """
-#     # TODO: Test it!
-#     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     sock.settimeout(3)  # TODO: read from config
-#     connect = 1
-#     try:
-#         connect = sock.connect_ex((target, 5060))  # return 0 if successfull
-#     except socket.gaierror:
-#         LOGGER.warning(f"Unable to resolve address of {target}")
-#     finally:
-#         sock.close()
-
-#     result = {'connect': True if not connect else False}
-#     return result
