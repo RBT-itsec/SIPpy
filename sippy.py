@@ -14,7 +14,8 @@ from secrets import randbits
 
 import plugins
 from lib.config import Config
-from lib.clioutput import CLIOutput
+from lib.output import CLIOutput
+from lib.reporthandler import ReportHandler
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -44,12 +45,10 @@ def main() -> None:
             LOGGER.critical(
                 f"Error running blocking test {testcase.name}. Quitting.")
             return
-        # LOGGER.info(
-        #    f"{testcase.target.name}: {testcase.name} = {testcase.output}")
-        CLIOutput.report(testcase)
+        # add testcast to ReportHandler and report from there to <X>-Output
+        ReportHandler.add_report(testcase)
+    ReportHandler.report(CLIOutput)  # control output via args
 
-    # finally report codec tests
-    CLIOutput.report_codecs()
 
 
 if __name__ == "__main__":

@@ -31,6 +31,10 @@ class BaseCheck(Plugin):
     def __init__(self):
         super().__init__()
 
+    def __repr__(self):
+        """ Set repr """
+        return "Base Check"
+
     def _run(self, target: str):  # rename base_check to _run
         """ Run the plugin """
         return self.base_check(target)
@@ -121,6 +125,10 @@ class Ping(Plugin):
 
     def __init__(self):
         super().__init__()
+
+    def __repr__(self):
+        """ Set repr """
+        return "Ping"
 
     def _run(self, target: str):
         return self.ping(target)

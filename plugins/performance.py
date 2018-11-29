@@ -30,6 +30,10 @@ class IperfCodec(Plugin):
     def __init__(self):
         super().__init__()
 
+    def __repr__(self):
+        """ Set repr """
+        return f"IPerf {self.name}"
+
     def _run(self, target: str):
         """ Run the plugin """
         return _iperf(target, self.config)

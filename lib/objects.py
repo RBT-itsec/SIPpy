@@ -33,4 +33,4 @@ class Testcase():
     returncode: bool = False
     blocking: bool = False
     output: Dict = field(default_factory=dict)
-    config: Dict = field(default_factory=dict)
+    # config: Dict = field(default_factory=dict)
