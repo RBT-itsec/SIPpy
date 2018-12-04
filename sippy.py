@@ -1,7 +1,8 @@
 """
 
 (c) jakob.pfister@rbt-nbg.de
-TODO: Add argparse
+TODO: Add argparse -> TUI or GUI
+TODO: Add ability to change local ethernet address (test-interface)
 TODO: Add CLI frontend
 TODO: optional add GUI frontend
 """
@@ -38,8 +39,10 @@ def main() -> None:
             f"Running test {testcase.name} against {testcase.target.name}")
         testcase.output = testcase.plugin.run(testcase.target.addr)
         if testcase.output:
-            testcase.returncode = True if testcase.output.values() else False
+            # testcase.returncode = True if testcase.output.values() else False
+            testcase.returncode = all(True for x in testcase.output.values() if x is not None)
             # testcase.returncode = all(testcase.output.values())  # fails with codec tests
+            # when e.g. paket loss = 0
         else:
             testcase.returncode = False
         if testcase.blocking and not testcase.returncode:

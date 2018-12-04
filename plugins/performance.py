@@ -27,8 +27,9 @@ class IperfCodec(Plugin):
     name = "iperfcodec"
     category = "codec"
 
-    def __init__(self):
+    def __init__(self, config: Optional[Dict] = None):
         super().__init__()
+        self.config = config or {}
 
     def __repr__(self):
         """ Set repr """
@@ -37,6 +38,39 @@ class IperfCodec(Plugin):
     def _run(self, target: str):
         """ Run the plugin """
         return _iperf(target, self.config)
+
+
+class IperfUDPCodec(IperfCodec):
+    """ Represents an UDP based codec built in iperf """
+    name = "iperfudpcodec"
+    category = "codec"
+
+    def __init__(self):
+        super().__init__()
+        self.jitter_ms: float = 0
+        self.lost_packets: int = 0
+        self.lost_percent: float = 0
+        self.mbps: float = 0
+
+    def __repr__(self):
+        """ Set repr """
+        return f"Iperf UDP Codec {self.name}"
+
+
+class IperfTCPCodec(IperfCodec):
+    """ Represents an TCP based codec built in iperf """
+    name = "iperftcpcodec"
+    category = "codec"
+
+    def __init__(self):
+        super().__init__()
+        self.retransmits: int = 0
+        self.sent_mbps: float = 0
+        self.rcvd_mbps: float = 0
+
+    def __repr__(self):
+        """ Set repr """
+        return f"Iperf TCP Codec {self.name}"
 
 
 def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
@@ -52,7 +86,8 @@ def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
     return codecs
 
 
-def _iperf(target: str, codec_config: Optional[Dict] = None) -> Dict:  # move into class
+# move into class
+def _iperf(target: str, codec_config: Optional[Dict] = None) -> Dict:
     """ Run the iperf3 client """
     client = iperf3.Client()
     if codec_config:
@@ -76,9 +111,19 @@ def _iperf(target: str, codec_config: Optional[Dict] = None) -> Dict:  # move in
     return result
 
 
+# for codec, config in _read_codecs_from_file().items():
+#     _codec = IperfCodec()
+#     _codec.name = codec
+#     _codec.config = config
+#     _codec.output = {}
+#     register_plugin(_codec)
+
 for codec, config in _read_codecs_from_file().items():
-    _codec = IperfCodec()
-    _codec.name = codec
+    _codec: IperfCodec  # _codec is of type or instance of IperfCodec
+    if config.get("protocol") == "udp":
+        _codec = IperfUDPCodec()
+    else:
+        _codec = IperfTCPCodec()
     _codec.config = config
     _codec.output = {}
     register_plugin(_codec)

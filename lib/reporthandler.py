@@ -4,35 +4,45 @@ Handle reporting of testcases
 
 from typing import List
 
-from typing import Type
+from typing import Type, Optional
 from .objects import Testcase
 from .output import OutputT
-
 
 
 class ReportHandler():
     """ Handle reporting of Testcases """
     connectivity_reports: List = []
     codec_reports: List = []
+    reported: List = []
+
+    # TODO: Handle reports immediately -> flag them to avoid duplicates
 
     @classmethod
-    def reset(cls):
+    def reset(cls) -> None:
         """ Reset all reports """
-        cls.reports = []
+        cls.connectivity_reports = []
+        cls.codec_reports = []
+        cls.reported = []
 
     @classmethod
-    def add_report(cls, testcase: Testcase):
-        """ Add a testcase to the reports """
+    def add_report(cls, testcase: Testcase, output: Optional[Type[OutputT]] = None) -> None:
+        """ Add a testcase to the reports, report immediately if output is given and testcase
+        if in a matching category """
         if testcase.plugin.category == "connectivity":
-            cls.connectivity_reports.append(testcase)
+            if output:  # if output is given, report connectivity test immidiately -> see TODO - flag?
+                output.report_connectivity(testcase)
+                cls.reported.append(testcase)
+            else:
+                cls.connectivity_reports.append(testcase)
         if testcase.plugin.category == "codec":
             # make tcp and udp reports?
             cls.codec_reports.append(testcase)
 
     @classmethod
-    def report(cls, output: Type[OutputT]):
+    def report(cls, output: Type[OutputT]) -> None:
         """ Report all the testcases """
         for report in cls.connectivity_reports:
-            output.report_connectivity(report)
-        for report in cls.codec_reports:
-            output.report_codec(report)
+            if report not in cls.reported:  # only report if not reported immediately
+                output.report_connectivity(report)
+        # for report in cls.codec_reports:
+        output.report_codecs(cls.codec_reports)
