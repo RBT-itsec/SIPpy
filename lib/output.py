@@ -69,7 +69,7 @@ class CLIOutput(Output):
         for testcase in testcases:
             if testcase.returncode:
                 _output = testcase.output
-                print("{:^10} | {jitter_ms:^10.8} | {lost_packets:^10.8} | {lost_percent:^10.8} | {mbps:^10.8}".format(
+                print("{:^10} | {jitter_ms:^10.8} | {lost_packets:^10} | {lost_percent:^10.8} | {mbps:^10.8}".format(
                     testcase.name, **_output))
             else:
                 # TODO: specify error
