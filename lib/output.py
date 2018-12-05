@@ -57,11 +57,11 @@ class CLIOutput(Output):
                   "lost_percent": "Lost %", "mbps": "MBps"}
 
         # TODO: make cleaner - f-strings possible?
-        header_str = f"{'Codec':^10} | \
-                        {header['jitter_ms']:^10} | \
-                        {header['lost_packets']:^10} | \
-                        {header['lost_percent']:^10} | \
-                        {header['mbps']:^10}"
+        header_str = f"{'Codec':^15} | \
+                        {header['jitter_ms']:^15} | \
+                        {header['lost_packets']:^15} | \
+                        {header['lost_percent']:^15} | \
+                        {header['mbps']:^15}"
 
         print(header_str)
         print("-" * len(header_str))
@@ -69,11 +69,11 @@ class CLIOutput(Output):
         for testcase in testcases:
             if testcase.returncode:
                 _output = testcase.output
-                print("{:^10} | {jitter_ms:^10.8} | {lost_packets:^10} | {lost_percent:^10.8} | {mbps:^10.8}".format(
+                print("{:^15} | {jitter_ms:^15.8} | {lost_packets:^15} | {lost_percent:^15.8} | {mbps:^15.8}".format(
                     testcase.name, **_output))
             else:
                 # TODO: specify error
-                print("{:^10} | ERROR".format(testcase.name))
+                print("{:^15} | ERROR".format(testcase.name))
 
     @classmethod
     def report_tcp(cls, testcases: List[Testcase]):
@@ -81,10 +81,10 @@ class CLIOutput(Output):
         header = {"retransmits": "Retransmits",
                   "sent_mbps": "MBps sent", "rcvd_mbps": "MBps received"}
 
-        header_str = f"{'Codec':^10} | \
-                        {header['retransmits']:^10} | \
-                        {header['sent_mbps']:^10} | \
-                        {header['rcvd_mbps']:^10}"
+        header_str = f"{'Codec':^15} | \
+                        {header['retransmits']:^15} | \
+                        {header['sent_mbps']:^15} | \
+                        {header['rcvd_mbps']:^15}"
 
         print(header_str)
         print("-" * len(header_str))
@@ -92,11 +92,11 @@ class CLIOutput(Output):
         for testcase in testcases:
             if testcase.returncode:
                 _output = testcase.output
-                print("{:^10} | {retransmits:^10.8} | {sent_mbps:^10.8} | {rcvd_mbps:^10.8}".format(
+                print("{:^15} | {retransmits:^15} | {sent_mbps:^15.8} | {rcvd_mbps:^15.8}".format(
                     testcase.name, **_output))
             else:
                 # TODO: specify error
-                print("{:^10} | ERROR".format(testcase.name))
+                print("{:^15} | ERROR".format(testcase.name))
 
         # if testcase.returncode:
         #     print(
