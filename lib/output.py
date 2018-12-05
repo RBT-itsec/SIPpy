@@ -56,12 +56,6 @@ class CLIOutput(Output):
         header = {"jitter_ms": "Jitter (ms)", "lost_packets": "Packets lost",
                   "lost_percent": "Lost %", "mbps": "MBps"}
 
-        # TODO: make cleaner - f-strings possible?
-        # header_str = f"{'Codec':^15} | \
-        #                 {header['jitter_ms']:^15} | \
-        #                 {header['lost_packets']:^15} | \
-        #                 {header['lost_percent']:^15} | \
-        #                 {header['mbps']:^15}"
         header_str = "{:^15} | {jitter_ms:^15} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15}".format("Codec", **header)
 
         print(header_str)
@@ -70,7 +64,7 @@ class CLIOutput(Output):
         for testcase in testcases:
             if testcase.returncode:
                 _output = testcase.output
-                print("{:^15} | {jitter_ms:^15.8} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15.8}".format(
+                print("{:^15} | {jitter_ms:>15.5} | {lost_packets:>15} | {lost_percent:>15} | {mbps:>15.5}".format(
                     testcase.name, **_output))
             else:
                 # TODO: specify error
@@ -82,6 +76,7 @@ class CLIOutput(Output):
         header = {"retransmits": "Retransmits",
                   "sent_mbps": "MBps sent", "rcvd_mbps": "MBps received"}
 
+        # TODO: fix TCP report - like UDP report
         header_str = f"{'Codec':^15} | \
                         {header['retransmits']:^15} | \
                         {header['sent_mbps']:^15} | \
