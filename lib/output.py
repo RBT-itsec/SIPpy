@@ -57,11 +57,12 @@ class CLIOutput(Output):
                   "lost_percent": "Lost %", "mbps": "MBps"}
 
         # TODO: make cleaner - f-strings possible?
-        header_str = f"{'Codec':^15} | \
-                        {header['jitter_ms']:^15} | \
-                        {header['lost_packets']:^15} | \
-                        {header['lost_percent']:^15} | \
-                        {header['mbps']:^15}"
+        # header_str = f"{'Codec':^15} | \
+        #                 {header['jitter_ms']:^15} | \
+        #                 {header['lost_packets']:^15} | \
+        #                 {header['lost_percent']:^15} | \
+        #                 {header['mbps']:^15}"
+        header_str = "{:^15} | {jitter_ms:^15} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15}".format("Codec", **header)
 
         print(header_str)
         print("-" * len(header_str))
@@ -69,7 +70,7 @@ class CLIOutput(Output):
         for testcase in testcases:
             if testcase.returncode:
                 _output = testcase.output
-                print("{:^15} | {jitter_ms:^15.8} | {lost_packets:^15} | {lost_percent:^15.8} | {mbps:^15.8}".format(
+                print("{:^15} | {jitter_ms:^15.8} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15.8}".format(
                     testcase.name, **_output))
             else:
                 # TODO: specify error
