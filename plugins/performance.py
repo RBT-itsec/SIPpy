@@ -124,6 +124,7 @@ for codec, config in _read_codecs_from_file().items():
         _codec = IperfUDPCodec()
     else:
         _codec = IperfTCPCodec()
+    _codec.name = codec
     _codec.config = config
     _codec.output = {}
     register_plugin(_codec)

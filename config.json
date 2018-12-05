@@ -27,7 +27,7 @@
             ]
         },
         "iperftest": {
-            "addr": "192.168.23.153",
+            "addr": "192.168.11.5",
             "tests": [
                 "aptx_24bit",
                 "linear_2500kbps",
