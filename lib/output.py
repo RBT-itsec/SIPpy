@@ -38,15 +38,11 @@ class CLIOutput(Output):
 
     @classmethod
     def report_codecs(cls, testcases: List[Testcase]):
-        # make table !
         # Sort Codecs by TCP and UDP
-        # TODO: Check with ifisinstace
         udpcodecs = [
             testcase for testcase in testcases if isinstance(testcase.plugin, IperfUDPCodec)]
-            # testcase for testcase in testcases if "jitter_ms" in testcase.output]
         tcpcodecs = [
             testcase for testcase in testcases if isinstance(testcase.plugin, IperfTCPCodec)]
-            # testcase for testcase in testcases if "retransmits" in testcase.output]
 
         if udpcodecs:
             cls.report_udp(udpcodecs)
@@ -65,8 +61,6 @@ class CLIOutput(Output):
 
         CLIOutput._report(testcases, header_str, output_str)
 
-
-
     @classmethod
     def report_tcp(cls, testcases: List[Testcase]):
         """ Report TCP Testcases """
@@ -78,7 +72,6 @@ class CLIOutput(Output):
         output_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.5} | {rcvd_mbps:^15.5}"
 
         CLIOutput._report(testcases, header_str, output_str)
-
 
     @classmethod
     def _report(cls, testcases: List[Testcase], header: str, output_fmt: str):

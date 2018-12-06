@@ -15,8 +15,6 @@ class ReportHandler():
     codec_reports: List = []
     reported: List = []
 
-    # TODO: Handle reports immediately -> flag them to avoid duplicates
-
     @classmethod
     def reset(cls) -> None:
         """ Reset all reports """
@@ -29,7 +27,7 @@ class ReportHandler():
         """ Add a testcase to the reports, report immediately if output is given and testcase
         if in a matching category """
         if testcase.plugin.category == "connectivity":
-            if output:  # if output is given, report connectivity test immidiately -> see TODO - flag?
+            if output:  # if output is given, report connectivity test immidiately
                 output.report_connectivity(testcase)
                 cls.reported.append(testcase)
             else:

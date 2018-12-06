@@ -50,7 +50,7 @@ def main() -> None:
                 f"Error running blocking test {testcase.name}. Quitting.")
             return
         # add testcast to ReportHandler and report from there to <X>-Output
-        ReportHandler.add_report(testcase)
+        ReportHandler.add_report(testcase, CLIOutput)
     ReportHandler.report(CLIOutput)  # control output via args
 
 
