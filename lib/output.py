@@ -5,6 +5,7 @@ CLI Output of test results
 from typing import List, TypeVar
 
 from lib.objects import Testcase
+from plugins.performance import IperfTCPCodec, IperfUDPCodec
 
 
 # Use Type[T] when using @classmethod/class, else just T for instances
@@ -41,9 +42,11 @@ class CLIOutput(Output):
         # Sort Codecs by TCP and UDP
         # TODO: Check with ifisinstace
         udpcodecs = [
-            testcase for testcase in testcases if "jitter_ms" in testcase.output]
+            testcase for testcase in testcases if isinstance(testcase, IperfUDPCodec)
+            # testcase for testcase in testcases if "jitter_ms" in testcase.output]
         tcpcodecs = [
-            testcase for testcase in testcases if "retransmits" in testcase.output]
+            testcase for testcase in testcases if isinstance(testcase, IperfTCPCodec)
+            # testcase for testcase in testcases if "retransmits" in testcase.output]
 
         if udpcodecs:
             cls.report_udp(udpcodecs)
@@ -57,8 +60,7 @@ class CLIOutput(Output):
                   "lost_percent": "Lost %", "mbps": "MBps"}
 
         header_str = "{:^15} | {jitter_ms:^15} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15}".format(
-            "Codec", **header)
-        # .format("Codec", **header)
+            "UDP Codec", **header)
         output_str = "{:^15} | {jitter_ms:^15.5} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15.5}"
 
         CLIOutput._report(testcases, header_str, output_str)
@@ -71,9 +73,9 @@ class CLIOutput(Output):
         header = {"retransmits": "Retransmits",
                   "sent_mbps": "MBps sent", "rcvd_mbps": "MBps received"}
 
-        header_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.5} | {rcvd_mbps:^15.5}".format(
-            "Codec", **header)
-        output_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.8} | {rcvd_mbps:^15.8}"
+        header_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15} | {rcvd_mbps:^15}".format(
+            "TCP Codec", **header)
+        output_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.5} | {rcvd_mbps:^15.5}"
 
         CLIOutput._report(testcases, header_str, output_str)
 
