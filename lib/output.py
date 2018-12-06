@@ -42,10 +42,10 @@ class CLIOutput(Output):
         # Sort Codecs by TCP and UDP
         # TODO: Check with ifisinstace
         udpcodecs = [
-            testcase for testcase in testcases if isinstance(testcase, IperfUDPCodec)
+            testcase for testcase in testcases if isinstance(testcase, IperfUDPCodec)]
             # testcase for testcase in testcases if "jitter_ms" in testcase.output]
         tcpcodecs = [
-            testcase for testcase in testcases if isinstance(testcase, IperfTCPCodec)
+            testcase for testcase in testcases if isinstance(testcase, IperfTCPCodec)]
             # testcase for testcase in testcases if "retransmits" in testcase.output]
 
         if udpcodecs:
