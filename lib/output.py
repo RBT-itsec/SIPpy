@@ -58,7 +58,7 @@ class CLIOutput(Output):
 
         header_str = "{:^15} | {jitter_ms:^15} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15}".format(
             "UDP Codec", **header)
-        output_str = "{:^15} | {jitter_ms:^15.5} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15.5}"
+        output_str = "{:^15} | {jitter_ms:^15.5f} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15.5f}"
 
         CLIOutput._report(testcases, header_str, output_str)
 
@@ -70,7 +70,7 @@ class CLIOutput(Output):
 
         header_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15} | {rcvd_mbps:^15}".format(
             "TCP Codec", **header)
-        output_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.5} | {rcvd_mbps:^15.5}"
+        output_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.5f} | {rcvd_mbps:^15.5f}"
 
         CLIOutput._report(testcases, header_str, output_str)
 
