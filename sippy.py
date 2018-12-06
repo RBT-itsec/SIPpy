@@ -40,7 +40,7 @@ def main() -> None:
         testcase.output = testcase.plugin.run(testcase.target.addr)
         if testcase.output:
             # testcase.returncode = True if testcase.output.values() else False
-            testcase.returncode = all(True for x in testcase.output.values() if x is not None)
+            testcase.returncode = all(True if x is not None else False for x in testcase.output.values())
             # testcase.returncode = all(testcase.output.values())  # fails with codec tests
             # when e.g. paket loss = 0
         else:
