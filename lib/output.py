@@ -56,19 +56,24 @@ class CLIOutput(Output):
         header = {"jitter_ms": "Jitter (ms)", "lost_packets": "Packets lost",
                   "lost_percent": "Lost %", "mbps": "MBps"}
 
-        header_str = "{:^15} | {jitter_ms:^15} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15}".format("Codec", **header)
+        header_str = "{:^15} | {jitter_ms:^15} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15}".format(
+            "Codec", **header)
+        # .format("Codec", **header)
+        output_str = "{:^15} | {jitter_ms:^15.5} | {lost_packets:^15} | {lost_percent:^15} | {mbps:^15.5}"
 
-        print(header_str)
-        print("-" * len(header_str))
+        CLIOutput._report(testcases, header_str, output_str)
 
-        for testcase in testcases:
-            if testcase.returncode:
-                _output = testcase.output
-                print("{:^15} | {jitter_ms:>15.5} | {lost_packets:>15} | {lost_percent:>15} | {mbps:>15.5}".format(
-                    testcase.name, **_output))
-            else:
-                # TODO: specify error
-                print("{:^15} | ERROR".format(testcase.name))
+        # print(header_str)
+        # print("-" * len(header_str))
+
+        # for testcase in testcases:
+        #     if testcase.returncode:
+        #         _output = testcase.output
+        #         #print("{:^15} | {jitter_ms:>15.5} | {lost_packets:>15} | {lost_percent:>15} | {mbps:>15.5}".format(
+        #         print(output_str.format(testcase.name, **_output))
+        #     else:
+        #         # TODO: specify error
+        #         print("{:^15} | ERROR".format(testcase.name))
 
     @classmethod
     def report_tcp(cls, testcases: List[Testcase]):
@@ -81,22 +86,32 @@ class CLIOutput(Output):
                         {header['retransmits']:^15} | \
                         {header['sent_mbps']:^15} | \
                         {header['rcvd_mbps']:^15}"
+        output_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.8} | {rcvd_mbps:^15.8}"
 
-        print(header_str)
-        print("-" * len(header_str))
+        CLIOutput._report(testcases, header_str, output_str)
+
+        # print(header_str)
+        # print("-" * len(header_str))
+
+        # for testcase in testcases:
+        #     if testcase.returncode:
+        #         _output = testcase.output
+        #         print("{:^15} | {retransmits:^15} | {sent_mbps:^15.8} | {rcvd_mbps:^15.8}".format(
+        #             testcase.name, **_output))
+        #     else:
+        #         # TODO: specify error
+        #         print("{:^15} | ERROR".format(testcase.name))
+
+    @classmethod
+    def _report(cls, testcases: List[Testcase], header: str, output_fmt: str):
+        """ Function to report codec information based on header and output formats """
+        print("-" * len(header))
+        print(header)
+        print("-" * len(header))
 
         for testcase in testcases:
             if testcase.returncode:
-                _output = testcase.output
-                print("{:^15} | {retransmits:^15} | {sent_mbps:^15.8} | {rcvd_mbps:^15.8}".format(
-                    testcase.name, **_output))
+                print(output_fmt.format(testcase.name, **testcase.output))
             else:
-                # TODO: specify error
-                print("{:^15} | ERROR".format(testcase.name))
-
-        # if testcase.returncode:
-        #     print(
-        #         f"[ISOK] {testcase.target.name} ({testcase.target.addr}) | {testcase.name}: {testcase.output}")
-        # else:
-        #     print(
-        #         f"[FAIL] {testcase.target.name} ({testcase.target.addr}) | {testcase.name}: {testcase.output}")
+                print("{:^14} | ERROR".format(testcase.name))
+        print("-" * len(header))

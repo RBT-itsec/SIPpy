@@ -31,8 +31,8 @@
             "tests": [
                 "aptx_24bit",
                 "linear_2500kbps",
-                "aac_ld_stereo",
-                "perftest_udp"
+                "perftest_udp",
+                "perftest_tcp"
             ]
         }
     }
