@@ -63,17 +63,7 @@ class CLIOutput(Output):
 
         CLIOutput._report(testcases, header_str, output_str)
 
-        # print(header_str)
-        # print("-" * len(header_str))
 
-        # for testcase in testcases:
-        #     if testcase.returncode:
-        #         _output = testcase.output
-        #         #print("{:^15} | {jitter_ms:>15.5} | {lost_packets:>15} | {lost_percent:>15} | {mbps:>15.5}".format(
-        #         print(output_str.format(testcase.name, **_output))
-        #     else:
-        #         # TODO: specify error
-        #         print("{:^15} | ERROR".format(testcase.name))
 
     @classmethod
     def report_tcp(cls, testcases: List[Testcase]):
@@ -81,26 +71,12 @@ class CLIOutput(Output):
         header = {"retransmits": "Retransmits",
                   "sent_mbps": "MBps sent", "rcvd_mbps": "MBps received"}
 
-        # TODO: fix TCP report - like UDP report
-        header_str = f"{'Codec':^15} | \
-                        {header['retransmits']:^15} | \
-                        {header['sent_mbps']:^15} | \
-                        {header['rcvd_mbps']:^15}"
+        header_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.5} | {rcvd_mbps:^15.5}".format(
+            "Codec", **header)
         output_str = "{:^15} | {retransmits:^15} | {sent_mbps:^15.8} | {rcvd_mbps:^15.8}"
 
         CLIOutput._report(testcases, header_str, output_str)
 
-        # print(header_str)
-        # print("-" * len(header_str))
-
-        # for testcase in testcases:
-        #     if testcase.returncode:
-        #         _output = testcase.output
-        #         print("{:^15} | {retransmits:^15} | {sent_mbps:^15.8} | {rcvd_mbps:^15.8}".format(
-        #             testcase.name, **_output))
-        #     else:
-        #         # TODO: specify error
-        #         print("{:^15} | ERROR".format(testcase.name))
 
     @classmethod
     def _report(cls, testcases: List[Testcase], header: str, output_fmt: str):
