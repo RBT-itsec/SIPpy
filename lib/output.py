@@ -82,8 +82,11 @@ class CLIOutput(Output):
         print("-" * len(header))
 
         for testcase in testcases:
+            name = testcase.name
             if testcase.returncode:
+                name = f"{Fore.GREEN}{name}{Fore.RESET}"
                 print(output_fmt.format(testcase.name, **testcase.output))
             else:
+                name = f"{Fore.RED}{name}{Fore.RESET}"
                 print("{:^14} | ERROR".format(testcase.name))
         print("-" * len(header))
