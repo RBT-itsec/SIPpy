@@ -5,6 +5,7 @@ CLI Output of test results
 from typing import List, TypeVar
 
 from lib.objects import Testcase
+from . import Fore, Back
 from plugins.performance import IperfTCPCodec, IperfUDPCodec
 
 
@@ -31,10 +32,10 @@ class CLIOutput(Output):
     def report_connectivity(cls, testcase: Testcase):
         if testcase.returncode:
             print(
-                f"[ISOK] {testcase.target.name} ({testcase.target.addr}) | {testcase.name}: {testcase.output}")
+                f"{Fore.GREEN}[ISOK]{Fore.RESET} {testcase.target.name} ({testcase.target.addr}) | {testcase.name}: {testcase.output}")
         else:
             print(
-                f"[FAIL] {testcase.target.name} ({testcase.target.addr}) | {testcase.name}: {testcase.output}")
+                f"{Fore.RED}[FAIL]{Fore.RESET} {testcase.target.name} ({testcase.target.addr}) | {testcase.name}: {testcase.output}")
 
     @classmethod
     def report_codecs(cls, testcases: List[Testcase]):
