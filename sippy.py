@@ -1,3 +1,5 @@
+# Copyright (c) 2019 ARGE Rundfunk-Betriebstechnik. MIT license, see LICENSE file.
+
 """
 
 (c) jakob.pfister@rbt-nbg.de
@@ -37,6 +39,7 @@ def main() -> None:
     for testcase in config.tests:
         LOGGER.info(
             f"Running test {testcase.name} against {testcase.target.name}")
+            # TODO: Let reporter print Testcase x/num
         testcase.output = testcase.plugin.run(testcase.target.addr)
         if testcase.output:
             # testcase.returncode = True if testcase.output.values() else False

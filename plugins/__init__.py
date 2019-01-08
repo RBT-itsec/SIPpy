@@ -1,3 +1,5 @@
+# Copyright (c) 2019 ARGE Rundfunk-Betriebstechnik. MIT license, see LICENSE file.
+
 """
 Handle automatic plugin registration for this folder
 via @register_plugin or direct call of register_plugin

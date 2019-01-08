@@ -1,3 +1,5 @@
+# Copyright (c) 2019 ARGE Rundfunk-Betriebstechnik. MIT license, see LICENSE file.
+
 """
 CLI Output of test results
 """
@@ -5,8 +7,8 @@ CLI Output of test results
 from typing import List, TypeVar
 
 from lib.objects import Testcase
-from . import Fore, Back
 from plugins.performance import IperfTCPCodec, IperfUDPCodec
+from . import Fore
 
 
 # Use Type[T] when using @classmethod/class, else just T for instances
@@ -81,10 +83,12 @@ class CLIOutput(Output):
         print(header)
         print("-" * len(header))
 
+        # TODO: add column with codec specific bandwidth - check if in +2%-window?
+
         for testcase in testcases:
             name = testcase.name
             if testcase.returncode:
                 print(output_fmt.format(name, **testcase.output))
             else:
-                print("{:^14} | ERROR".format(name))
+                print("{:^15} | ERROR".format(name))
         print("-" * len(header))

@@ -1,3 +1,5 @@
+# Copyright (c) 2019 ARGE Rundfunk-Betriebstechnik. MIT license, see LICENSE file.
+
 """
 Performance tests
 
@@ -29,7 +31,7 @@ class IperfCodec(Plugin):
 
     def __init__(self, config: Optional[Dict] = None):
         super().__init__()
-        self.config = config or {}
+        self.config: Dict = config or {}
 
     def __repr__(self):
         """ Set repr """
@@ -110,13 +112,6 @@ def _iperf(target: str, codec_config: Optional[Dict] = None) -> Dict:
                   'rcvd_mbps': result.received_Mbps}
     return result
 
-
-# for codec, config in _read_codecs_from_file().items():
-#     _codec = IperfCodec()
-#     _codec.name = codec
-#     _codec.config = config
-#     _codec.output = {}
-#     register_plugin(_codec)
 
 for codec, config in _read_codecs_from_file().items():
     _codec: IperfCodec  # _codec is of type or instance of IperfCodec
