@@ -4,7 +4,7 @@ SIP Connection Tester
 ## Requirements
  * Linux OS with iproute2
  * Python3.7
- * iperf3
+ * iperf3 (tested with 3.6+)
 
 ## Base Checks
  * Link check
