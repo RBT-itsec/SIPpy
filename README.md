@@ -12,4 +12,4 @@ SIP Connection Tester
  * Ping check
 
 ## Performance Checks
- * Basic Codec Tests with iperf3 (see codecs.json)
+ * Basic Codec Tests with iperf3 (see codecs.json, set blksize parameter for correct timing)
