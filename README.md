@@ -1,5 +1,8 @@
 # SIPpy
 SIP Connection Tester
+```
+Syntax: python -m sippy
+```
 
 ## Requirements
  * Linux OS with iproute2
