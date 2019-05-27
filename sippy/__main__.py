@@ -15,10 +15,10 @@ import logging
 from secrets import randbits
 
 
-import plugins
-from lib.config import Config
-from lib.output import CLIOutput
-from lib.reporthandler import ReportHandler
+from sippy import plugins
+from sippy.lib.config import Config
+from sippy.lib.output import CLIOutput
+from sippy.lib.reporthandler import ReportHandler
 
 
 logging.basicConfig(level=logging.DEBUG)

@@ -6,8 +6,8 @@ CLI Output of test results
 
 from typing import List, TypeVar
 
-from lib.objects import Testcase
-from plugins.performance import IperfTCPCodec, IperfUDPCodec
+from sippy.lib.objects import Testcase
+from sippy.plugins.performance import IperfTCPCodec, IperfUDPCodec
 from . import Fore
 
 

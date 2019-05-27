@@ -7,7 +7,7 @@ Common objects
 from dataclasses import dataclass, field
 from typing import Dict
 
-from plugins import Plugin
+from sippy.plugins import Plugin
 
 
 @dataclass

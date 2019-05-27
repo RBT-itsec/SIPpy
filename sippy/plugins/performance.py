@@ -18,7 +18,7 @@ import logging
 from typing import Dict, Optional
 # from functools import partial
 
-from lib import iperf3
+from sippy.lib import iperf3
 from . import register_plugin, Plugin
 
 LOGGER = logging.getLogger("SIPpy.Performance")

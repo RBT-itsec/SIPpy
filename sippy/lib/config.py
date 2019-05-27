@@ -11,9 +11,9 @@ import json
 import logging
 from typing import Dict, List
 
-from lib.objects import Target, Testcase
+from sippy.lib.objects import Target, Testcase
 
-import plugins
+from sippy import plugins
 
 
 LOGGER = logging.getLogger("SIPpy.Config")

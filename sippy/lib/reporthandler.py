@@ -5,8 +5,8 @@ Handle reporting of testcases
 """
 
 from typing import List
-
 from typing import Type, Optional
+
 from .objects import Testcase
 from .output import OutputT
 
