@@ -12,9 +12,10 @@ TODO: optional add GUI frontend
 
 
 import logging
+import os
 from secrets import randbits
 
-
+from sippy import BASE_PATH
 from sippy import plugins
 from sippy.lib.config import Config
 from sippy.lib.output import CLIOutput
@@ -34,7 +35,7 @@ def main() -> None:
     LOGGER.info(f"The following plugins are available: {dir(plugins)}")
 
     LOGGER.info(f"Loading configuration")
-    config = Config("config.json")
+    config = Config(os.path.join(BASE_PATH, "config.json"))
 
     for testcase in config.tests:
         LOGGER.info(

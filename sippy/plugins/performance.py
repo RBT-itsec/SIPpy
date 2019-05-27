@@ -15,9 +15,12 @@ Needed fields
 
 import json
 import logging
+import os
+
 from typing import Dict, Optional
 # from functools import partial
 
+from sippy import BASE_PATH
 from sippy.lib import iperf3
 from . import register_plugin, Plugin
 
@@ -75,7 +78,7 @@ class IperfTCPCodec(IperfCodec):
         return f"Iperf TCP Codec {self.name}"
 
 
-def _read_codecs_from_file(filename: str = './codecs.json') -> Dict:
+def _read_codecs_from_file(filename: str) -> Dict:
     """ Read codec information from file """
     codecs: Dict = {}
     try:
@@ -113,7 +116,8 @@ def _iperf(target: str, codec_config: Optional[Dict] = None) -> Dict:
     return result
 
 
-for codec, config in _read_codecs_from_file().items():
+codecs_file = os.path.join(BASE_PATH, 'codecs.json')
+for codec, config in _read_codecs_from_file(codecs_file).items():
     _codec: IperfCodec  # _codec is of type or instance of IperfCodec
     if config.get("protocol") == "udp":
         _codec = IperfUDPCodec()
