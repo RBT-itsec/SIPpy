@@ -27,8 +27,8 @@ class Config():
         self.setup()
         if self.filename:
             self.from_file(self.filename)
-        elif self.config:
-            self.from_dict(self.config)
+        elif config:
+            self.from_dict(config)
 
     def setup(self):
         """ Setup/clear all elements """
