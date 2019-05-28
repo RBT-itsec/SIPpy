@@ -22,11 +22,13 @@ LOGGER = logging.getLogger("SIPpy.Config")
 class Config():
     """ Holds all configuration data for SIPpy """
 
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, config=None):
         self.filename = filename
         self.setup()
         if self.filename:
             self.from_file(self.filename)
+        elif self.config:
+            self.from_dict(self.config)
 
     def setup(self):
         """ Setup/clear all elements """
@@ -103,13 +105,18 @@ class Config():
 
     def from_file(self, filename: str):
         """ Read JSON config from file """
-        self.setup()  # reset all configuration items
         try:
-            self.config = json.load(open(filename, 'r'))
-            self.blocking_tests = self.config.get('plugins')
-            self.targets = self.config.get('targets')
-            self.tests = self.config.get('targets')
+            self.from_dict(json.load(open(filename, 'r')))
         except FileNotFoundError:
             LOGGER.critical(f"Configuration file {filename} not found!")
         except json.JSONDecodeError:
             LOGGER.critical(f"Could not decode data from {filename}!")
+
+    def from_dict(self, config):
+        """ Get config from dict """
+        self.setup()  # reset all configuration items
+
+        self.config = config
+        self.blocking_tests = self.config.get('plugins')
+        self.targets = self.config.get('targets')
+        self.tests = self.config.get('targets')
