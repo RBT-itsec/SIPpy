@@ -46,3 +46,11 @@ class ReportHandler():
                 output.report_connectivity(report)
         # for report in cls.codec_reports:
         output.report_codecs(cls.codec_reports)
+
+    @classmethod
+    def get_connectivity_reports(cls) -> List[Testcase]:
+        return cls.connectivity_reports
+
+    @classmethod
+    def get_codec_reports(cls) -> List[Testcase]:
+        return cls.codec_reports
